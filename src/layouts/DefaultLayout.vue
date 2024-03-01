@@ -1,19 +1,12 @@
 <template>
   <div>
-    <CommonHeader></CommonHeader>
-    <router-view></router-view>
+    <CommonLayout></CommonLayout>
     <CommonFooter></CommonFooter>
   </div>
 </template>
 
-<script>
-import CommonHeader from './CommonHeader.vue'
+<script setup lang="ts">
+import CommonLayout from './CommonLayout.vue'
 import CommonFooter from './CommonFooter.vue'
 
-export default {
-  components: {
-    CommonHeader,
-    CommonFooter
-  }
-}
 </script>

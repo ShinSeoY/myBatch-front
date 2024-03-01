@@ -23,36 +23,51 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/DefaultLayout.vue'),
     children: [
       {
-        name: 'MyHome',
-        path: 'myHome',
-        component: () => import('pages/MyHome.vue')
+        name: 'Bookmarks',
+        path: 'bookmarks',
+        component: () => import('pages/Bookmarks.vue')
       },
       {
-        name: 'TestBar',
-        path: 'testBar',
-        component: () => import('components/TestBar.vue')
+        name: 'Calculator',
+        path: 'calculator',
+        component: () => import('pages/Calculator.vue')
       },
       {
-        path: 'question',
-        component: () => import('pages/question/Question.vue'),
-        children: [
-          {
-            name: 'QuestionList',
-            path: '',
-            component: () => import('pages/question/QuestionList.vue')
-          },
-          {
-            name: 'QuestionDetail',
-            path: ':seq',
-            component: () => import('pages/question/QuestionDetail.vue')
-          },
-          {
-            name: 'QuestionCreate',
-            path: 'create',
-            component: () => import('pages/question/QuestionDetail.vue')
-          }
-        ]
-      }
+        name: 'Notification',
+        path: 'notification',
+        component: () => import('pages/Notification.vue')
+      },
+      // {
+      //   name: 'MyHome',
+      //   path: 'myHome',
+      //   component: () => import('pages/MyHome.vue')
+      // },
+      // {
+      //   name: 'TestBar',
+      //   path: 'testBar',
+      //   component: () => import('components/TestBar.vue')
+      // },
+      // {
+      //   path: 'question',
+      //   component: () => import('pages/question/Question.vue'),
+      //   children: [
+      //     {
+      //       name: 'QuestionList',
+      //       path: '',
+      //       component: () => import('pages/question/QuestionList.vue')
+      //     },
+      //     {
+      //       name: 'QuestionDetail',
+      //       path: ':seq',
+      //       component: () => import('pages/question/QuestionDetail.vue')
+      //     },
+      //     {
+      //       name: 'QuestionCreate',
+      //       path: 'create',
+      //       component: () => import('pages/question/QuestionDetail.vue')
+      //     }
+      //   ]
+      // }
     ]
   }
 ]
