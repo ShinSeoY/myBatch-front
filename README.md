@@ -1,43 +1,19 @@
-# Quasar App (question-front)
+# 환율 계산기 front-end
+환율정보 제공 및 환율 계산, push 알림 프로젝트
+<br/>
+<br/>
 
-myeonjeobbokka question verse front
+## 사용 스택
+Node.js <br/>
+Vue3 <br/>
+Quasar <br/>
+Docker <br/>
+Docker-compose <br/>
+<br/>
 
-## Install the dependencies
+## 적용 기술
+> - ... <br/><br/>
+<br/>
+<br/>
 
-```bash
-yarn
-# or
-npm install
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-
-```bash
-quasar dev
-```
-
-### Lint the files
-
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-### Format the files
-
-```bash
-yarn format
-# or
-npm run format
-```
-
-### Build the app for production
-
-```bash
-quasar build
-```
-
-### Customize the configuration
-
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+## 구현 과정
