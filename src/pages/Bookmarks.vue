@@ -71,6 +71,8 @@ const updateFavorite = (row: any) => {
     //     router.push({ name: 'Package' })
     //   }
     // }
+  }).onCancel(() => {
+    row.favorite = true;
   })
 }
 </script>

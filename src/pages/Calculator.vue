@@ -15,7 +15,7 @@ const columns: any = [
     align: 'left',
     field: (row: any) => row.name
   },
-  { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.name }, //ex) USD, KRW, ..
+  { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.unit }, //ex) USD, KRW, ..
   { name: 'dealBasR', label: '거래 기준 환율', field: (row: any) => row.dealBasR },
   { name: 'exchangeRate', label: 'Exchange Rate Per 1000 KRW', field: (row: any) => row.exchangeRate }, // = 전환금액/거래기준환율
   { name: 'ttb', label: '전신외환 살 때 환율', field: (row: any) => row.ttb },

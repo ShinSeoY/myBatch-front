@@ -5,25 +5,15 @@ const tab = ref('bookmarks')
 </script>
 
 <template>
-  <!-- <div class="header">
-    <h1>오늘의 환율</h1>
-    <router-link to="/bookmarks">관심 환율</router-link>
-    <router-link to="/calculator">계산기</router-link>
-    <router-link to="/notification">Question</router-link>
-  </div> -->
   <div class="q-pa-md">
     <q-layout view="lHh lpr lFf" container style="height: 800px" class="shadow-2 rounded-borders">
-      <q-header elevated>
-        <q-toolbar>
-          <q-btn flat round dense icon="menu" class="q-mr-sm" />
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
-          </q-avatar>
+      <q-header elevated class="my-q-header">
+        <!-- <q-toolbar> -->
+          <!-- <q-btn flat round dense icon="menu" class="q-mr-sm" /> -->
+          <!-- <q-toolbar-title> </q-toolbar-title> -->
 
-          <q-toolbar-title>Quasar Framework</q-toolbar-title>
-
-          <q-btn flat round dense icon="whatshot" />
-        </q-toolbar>
+          <!-- <q-btn flat round dense icon="whatshot" /> -->
+        <!-- </q-toolbar> -->
 
         <q-tabs v-model="tab">
           <q-route-tab to="/bookmarks" name="bookmarks" label="관심 환율" />
@@ -40,12 +30,7 @@ const tab = ref('bookmarks')
 </template>
 
 <style scoped>
-/* .header {
-  text-align: center;
-  background-color: lightgray;
+.my-q-header{
+  padding-top: 10px;
 }
-
-a {
-  color: #42b983;
-} */
 </style>
