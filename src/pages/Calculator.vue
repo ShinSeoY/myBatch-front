@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import dayjs from 'dayjs';
+import dayjs from 'dayjs'
 import { ref } from 'vue'
 
-const columns:any = [
+const columns: any = [
   {
     name: 'index',
     label: '#',
@@ -11,20 +11,20 @@ const columns:any = [
   {
     name: 'name',
     required: true,
-    label: '',  // 나라명 + 통화명 ex) 한국(원), 미국(달러) ..
+    label: '', // 나라명 + 통화명 ex) 한국(원), 미국(달러) ..
     align: 'left',
     field: (row: any) => row.name
   },
-  { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.name}, //ex) USD, KRW, ..
-  { name: 'dealBasR', label: '거래 기준 환율', field: (row: any) => row.dealBasR},
-  { name: 'exchangeRate', label: 'Exchange Rate Per 1000 KRW', field: (row: any) => row.exchangeRate}, // = 전환금액/거래기준환율
-  { name: 'ttb', label: '전신외환 살 때 환율', field: (row: any) => row.ttb},
-  { name: 'tts', label: '전신외환 팔 때 환율', field: (row: any) => row.tts}
+  { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.name }, //ex) USD, KRW, ..
+  { name: 'dealBasR', label: '거래 기준 환율', field: (row: any) => row.dealBasR },
+  { name: 'exchangeRate', label: 'Exchange Rate Per 1000 KRW', field: (row: any) => row.exchangeRate }, // = 전환금액/거래기준환율
+  { name: 'ttb', label: '전신외환 살 때 환율', field: (row: any) => row.ttb },
+  { name: 'tts', label: '전신외환 팔 때 환율', field: (row: any) => row.tts }
 ]
 
-const rows:any = ref([
+const rows: any = ref([
   {
-    index:1,
+    index: 1,
     name: '한국 (원)',
     unit: 'KRW',
     dealBasR: 0,
@@ -34,7 +34,7 @@ const rows:any = ref([
     tts: 0
   },
   {
-    index:2,
+    index: 2,
     name: '미국 (달러)',
     unit: 'USD',
     dealBasR: 0,
@@ -44,7 +44,7 @@ const rows:any = ref([
     tts: 0
   },
   {
-    index:3,
+    index: 3,
     name: '일본 (엔)',
     unit: 'YEN',
     dealBasR: 0,
@@ -60,42 +60,25 @@ const selected = ref([])
 const originAmount = ref()
 const chagnedAmount = ref()
 const dense = ref(false)
-const selectedItem = ref({name:'미국',
-    unit:'USD',
-  dealBasR:1066.9,
-  krUnit:'달러'})
+const selectedItem = ref({ name: '미국', unit: 'USD', dealBasR: 1066.9, krUnit: '달러' })
 const selectOptions: any[] = [
-{name:'한국',
-    unit:'KRW',
-  dealBasR:1,
-  krUnit:'원'},
-  {name:'미국',
-    unit:'USD',
-  dealBasR:1066.9,
-  krUnit:'달러'},
-  {name:'태국',
-    unit:'THB',
-  dealBasR:32.9,
-  krUnit:'바트'},
-  {name:'중국',
-    unit:'CNH',
-  dealBasR:163.65,
-  krUnit:'위엔'}
+  { name: '한국', unit: 'KRW', dealBasR: 1, krUnit: '원' },
+  { name: '미국', unit: 'USD', dealBasR: 1066.9, krUnit: '달러' },
+  { name: '태국', unit: 'THB', dealBasR: 32.9, krUnit: '바트' },
+  { name: '중국', unit: 'CNH', dealBasR: 163.65, krUnit: '위엔' }
 ]
 
-
 const getSelectedString = () => {
-    return selected.value.length === 0 ? '' : `${selected.value.length} record${selected.value.length > 1 ? 's' : ''} selected of ${rows.value.length}`
-  }
+  return selected.value.length === 0 ? '' : `${selected.value.length} record${selected.value.length > 1 ? 's' : ''} selected of ${rows.value.length}`
+}
 const clickFavorite = () => {
   console.log(selected)
 }
-const calcChangedAmount = ()  => {
-  if(originAmount.value){
+const calcChangedAmount = () => {
+  if (originAmount.value) {
     chagnedAmount.value = originAmount.value / selectedItem.value.dealBasR + ' ' + selectedItem.value.krUnit
   }
 }
-
 </script>
 
 <template>
@@ -103,41 +86,32 @@ const calcChangedAmount = ()  => {
     <q-page class="q-pa-md parent-container">
       <div class="calc">
         <div class="calc_title">환율 계산기</div>
-        <div class="base-date" style="text-align: left;">
-            기준 날짜 : {{ baseDate }}
-        </div>
+        <div class="base-date" style="text-align: left">기준 날짜 : {{ baseDate }}</div>
         <div class="input-container">
-          <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount"/>
-          <div class="spacer"></div> 
-          <q-input class="custom-input" outlined v-model="chagnedAmount" readonly label="환전 후 금액" :dense="dense"/>
-          <q-select
-              v-model="selectedItem"
-              :options="selectOptions"
-              option-label="unit"
-              outlined
-              @update:model-value="calcChangedAmount"
-          />
+          <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount" />
+          <div class="spacer"></div>
+          <q-input class="custom-input" outlined v-model="chagnedAmount" readonly label="환전 후 금액" :dense="dense" />
+          <q-select v-model="selectedItem" :options="selectOptions" option-label="unit" outlined @update:model-value="calcChangedAmount" />
         </div>
       </div>
 
       <q-table
-      flat bordered
-      title="오늘의 환율"
-      :rows="rows"
-      :columns="columns"
-      row-key="name"
-      :selected-rows-label="getSelectedString"
-      selection="multiple"
-      v-model:selected="selected"
-    >
-      <template v-slot:top-right>
-        <q-btn icon="add" label="즐겨찾기 추가" @click="clickFavorite()" />
-      </template>
-    </q-table>
+        flat
+        bordered
+        title="오늘의 환율"
+        :rows="rows"
+        :columns="columns"
+        row-key="name"
+        :selected-rows-label="getSelectedString"
+        selection="multiple"
+        v-model:selected="selected"
+      >
+        <template v-slot:top-right>
+          <q-btn icon="add" label="즐겨찾기 추가" @click="clickFavorite()" />
+        </template>
+      </q-table>
 
-    <div class="q-mt-md">
-      Selected: {{ JSON.stringify(selected) }}
-    </div>
+      <div class="q-mt-md">Selected: {{ JSON.stringify(selected) }}</div>
     </q-page>
   </div>
 </template>
@@ -149,11 +123,11 @@ const calcChangedAmount = ()  => {
 }
 .calc {
   border: 1px solid rgba(0, 0, 0, 0.12);
-  padding:1%;
+  padding: 1%;
   margin-top: 5%;
   margin-bottom: 5%;
 }
-.calc_title{
+.calc_title {
   text-align: left;
   font-size: 20px;
   letter-spacing: 0.005em;

@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 
 const tab = ref('bookmarks')
-
 </script>
 
 <template>
@@ -18,7 +17,7 @@ const tab = ref('bookmarks')
         <q-toolbar>
           <q-btn flat round dense icon="menu" class="q-mr-sm" />
           <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
           </q-avatar>
 
           <q-toolbar-title>Quasar Framework</q-toolbar-title>
@@ -34,13 +33,11 @@ const tab = ref('bookmarks')
       </q-header>
 
       <q-page-container>
-        <router-view/>
+        <router-view />
       </q-page-container>
     </q-layout>
   </div>
 </template>
-
-
 
 <style scoped>
 /* .header {

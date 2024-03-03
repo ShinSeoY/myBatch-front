@@ -19,32 +19,30 @@ const onSubmit = async () => {
       message: '아이디 또는 비밀번호를 입력하세요'
     })
   } else {
-
     const loginResult = await axios.post('/api/login', {
       username: username.value,
       password: password.value
     })
 
-  switch (loginResult.data.code) {
-    case '1000':
-      $router.push({name: 'MyHome'})
+    switch (loginResult.data.code) {
+      case '1000':
+        $router.push({ name: 'MyHome' })
 
-      $q.notify({
-        color: 'green-4',
-        textColor: 'white',
-        icon: 'cloud_done',
-        message: '로그인 성공'
-      })
+        $q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: '로그인 성공'
+        })
 
-    case '1001':
-      $q.notify({
-        color: 'red-5',
-        textColor: 'white',
-        icon: 'warning',
-        message: '아이디 또는 비밀번호가 일치하지 않습니다'
-      })
-  }
-
+      case '1001':
+        $q.notify({
+          color: 'red-5',
+          textColor: 'white',
+          icon: 'warning',
+          message: '아이디 또는 비밀번호가 일치하지 않습니다'
+        })
+    }
   }
 }
 
