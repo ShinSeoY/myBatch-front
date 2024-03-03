@@ -9,10 +9,10 @@ const tab = ref('bookmarks')
     <q-layout view="lHh lpr lFf" container style="height: 800px" class="shadow-2 rounded-borders">
       <q-header elevated class="my-q-header">
         <!-- <q-toolbar> -->
-          <!-- <q-btn flat round dense icon="menu" class="q-mr-sm" /> -->
-          <!-- <q-toolbar-title> </q-toolbar-title> -->
+        <!-- <q-btn flat round dense icon="menu" class="q-mr-sm" /> -->
+        <!-- <q-toolbar-title> </q-toolbar-title> -->
 
-          <!-- <q-btn flat round dense icon="whatshot" /> -->
+        <!-- <q-btn flat round dense icon="whatshot" /> -->
         <!-- </q-toolbar> -->
 
         <q-tabs v-model="tab">
@@ -30,7 +30,7 @@ const tab = ref('bookmarks')
 </template>
 
 <style scoped>
-.my-q-header{
+.my-q-header {
   padding-top: 10px;
 }
 </style>

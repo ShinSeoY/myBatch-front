@@ -3,7 +3,7 @@ import { RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: { name: 'AdminLogin' }
+    redirect: { name: 'Login' }
   },
   {
     path: '/',
@@ -11,9 +11,9 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/EmptyLayout.vue'),
     children: [
       {
-        path: 'adminLogin',
-        name: 'AdminLogin',
-        component: () => import('pages/AdminLogin.vue')
+        name: 'Login',
+        path: 'login',
+        component: () => import('pages/Login.vue')
       }
     ]
   },

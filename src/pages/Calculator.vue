@@ -77,6 +77,8 @@ const clickFavorite = () => {
 const calcChangedAmount = () => {
   if (originAmount.value) {
     chagnedAmount.value = originAmount.value / selectedItem.value.dealBasR + ' ' + selectedItem.value.krUnit
+  } else {
+    chagnedAmount.value = null
   }
 }
 </script>

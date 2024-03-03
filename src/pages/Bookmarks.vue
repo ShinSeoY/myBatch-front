@@ -20,7 +20,7 @@ const columns: any = [
     field: (row: any) => row.name
     // format: (val: any) => `${val}`
   },
-  { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.name }, //ex) USD, KRW, ..
+  { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.unit }, //ex) USD, KRW, ..
   { name: 'dealBasR', label: '거래 기준 환율', field: (row: any) => row.dealBasR },
   { name: 'exchangeRate', label: 'Exchange Rate Per 1000 KRW', field: (row: any) => row.exchangeRate }, // = 전환금액/거래기준환율
   { name: 'favorite', label: '즐겨찾기', align: 'center', field: (row: any) => row.favorite }
@@ -56,24 +56,26 @@ const rows = ref([
 ])
 
 const updateFavorite = (row: any) => {
-  $q.dialog({ title: '알림', message: '즐겨찾기에서 해제하시겠습니까?', ok: '예', cancel: '아니오' }).onOk(async () => {
-    const indexToRemove = rows.value.findIndex((r) => r === row)
-    rows.value.splice(indexToRemove, 1)
-    // todo : 디비에서 즐겨찾기 해제
-    // const res = await _updatePackageWithSchedules(packageDto_, scheduleDtos_)
-    // console.log('editPackageWithSchedules', res)
-    // if (res) {
-    //   if (res?.error) {
-    //     console.error(res.error)
-    //     $q.dialog({ title: '알림', message: `실패 ${res.error.toString()}` })
-    //   }
-    //   else {
-    //     router.push({ name: 'Package' })
-    //   }
-    // }
-  }).onCancel(() => {
-    row.favorite = true;
-  })
+  $q.dialog({ title: '알림', message: '즐겨찾기에서 해제하시겠습니까?', ok: '예', cancel: '아니오' })
+    .onOk(async () => {
+      const indexToRemove = rows.value.findIndex((r) => r === row)
+      rows.value.splice(indexToRemove, 1)
+      // todo : 디비에서 즐겨찾기 해제
+      // const res = await _updatePackageWithSchedules(packageDto_, scheduleDtos_)
+      // console.log('editPackageWithSchedules', res)
+      // if (res) {
+      //   if (res?.error) {
+      //     console.error(res.error)
+      //     $q.dialog({ title: '알림', message: `실패 ${res.error.toString()}` })
+      //   }
+      //   else {
+      //     router.push({ name: 'Package' })
+      //   }
+      // }
+    })
+    .onCancel(() => {
+      row.favorite = true
+    })
 }
 </script>
 
