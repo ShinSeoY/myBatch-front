@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import dayjs from 'dayjs';
 import { ref } from 'vue'
 
 const columns:any = [
@@ -54,19 +55,71 @@ const rows:any = ref([
   }
 ])
 
+const baseDate = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
 const selected = ref([])
+const originAmount = ref()
+const chagnedAmount = ref()
+const dense = ref(false)
+const selectedItem = ref({name:'미국',
+    unit:'USD',
+  dealBasR:1066.9,
+  krUnit:'달러'})
+const selectOptions: any[] = [
+{name:'한국',
+    unit:'KRW',
+  dealBasR:1,
+  krUnit:'원'},
+  {name:'미국',
+    unit:'USD',
+  dealBasR:1066.9,
+  krUnit:'달러'},
+  {name:'태국',
+    unit:'THB',
+  dealBasR:32.9,
+  krUnit:'바트'},
+  {name:'중국',
+    unit:'CNH',
+  dealBasR:163.65,
+  krUnit:'위엔'}
+]
+
+
 const getSelectedString = () => {
     return selected.value.length === 0 ? '' : `${selected.value.length} record${selected.value.length > 1 ? 's' : ''} selected of ${rows.value.length}`
   }
 const clickFavorite = () => {
   console.log(selected)
 }
+const calcChangedAmount = ()  => {
+  if(originAmount.value){
+    chagnedAmount.value = originAmount.value / selectedItem.value.dealBasR + ' ' + selectedItem.value.krUnit
+  }
+}
+
 </script>
 
 <template>
   <div id="app">
-    <q-page class="q-pa-md">
-      <h1>계산기</h1>
+    <q-page class="q-pa-md parent-container">
+      <div class="calc">
+        <div class="calc_title">환율 계산기</div>
+        <div class="base-date" style="text-align: left;">
+            기준 날짜 : {{ baseDate }}
+        </div>
+        <div class="input-container">
+          <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount"/>
+          <div class="spacer"></div> 
+          <q-input class="custom-input" outlined v-model="chagnedAmount" readonly label="환전 후 금액" :dense="dense"/>
+          <q-select
+              v-model="selectedItem"
+              :options="selectOptions"
+              option-label="unit"
+              outlined
+              @update:model-value="calcChangedAmount"
+          />
+        </div>
+      </div>
+
       <q-table
       flat bordered
       title="오늘의 환율"
@@ -93,5 +146,36 @@ const clickFavorite = () => {
 #app {
   text-align: center;
   color: #2c3e50;
+}
+.calc {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding:1%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+.calc_title{
+  text-align: left;
+  font-size: 20px;
+  letter-spacing: 0.005em;
+  font-weight: 400;
+  margin-bottom: 2%;
+}
+.spacer {
+  width: 10%;
+  height: 40px;
+  background-image: url('/public/icons/exchange.png'); /* 화살표 이미지 경로 설정 */
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 8px 8px;
+}
+.input-container {
+  display: flex;
+}
+.custom-input {
+  width: 40%;
+  flex: 1;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 50px;
 }
 </style>
