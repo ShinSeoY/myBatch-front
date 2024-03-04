@@ -2,8 +2,7 @@
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import axios from 'axios'
-
+import { axios } from 'src/boot/axios'
 const $q = useQuasar()
 const $router = useRouter()
 
@@ -19,10 +18,11 @@ const onSubmit = async () => {
       message: '이메일, 핸드폰번호를 확인해주세요'
     })
   } else {
-    const loginResult = await axios.post('/api/login', {
+    const loginResult = await axios.post('/member/login', {
       email: email.value,
       phone: phone.value
     })
+
     switch (loginResult.data.code) {
       case '1000':
         $router.push({ name: 'Bookmarks' })
@@ -34,7 +34,7 @@ const onSubmit = async () => {
           message: '로그인 성공'
         })
 
-      case '1001' || undefined:
+      default:
         $q.dialog({
           title: '회원가입',
           message: `회원가입 되어있지 않은 사용자 입니다. <br/> <br/> 이메일 : ${email.value} <br/> 핸드폰번호 : ${phone.value} <br/><br/> 위 정보로 회원가입을 진행하시겠습니까?`,
@@ -43,7 +43,7 @@ const onSubmit = async () => {
           html: true
         })
           .onOk(async () => {
-            await axios.post('/api/signup', {
+            await axios.post('/member/signup', {
               email: email.value,
               phone: phone.value
             })
