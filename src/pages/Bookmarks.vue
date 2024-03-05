@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { axios } from 'src/boot/axios'
 
 const $q = useQuasar()
 
@@ -77,6 +78,15 @@ const updateFavorite = (row: any) => {
       row.favorite = true
     })
 }
+
+const setData = async () => {
+  const loginResult = await axios.get('/member/fav')
+  console.log(loginResult)
+}
+
+onMounted(async () => {
+  setData()
+})
 </script>
 
 <template>

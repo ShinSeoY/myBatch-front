@@ -3,6 +3,7 @@ import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { axios } from 'src/boot/axios'
+
 const $q = useQuasar()
 const $router = useRouter()
 
@@ -25,6 +26,8 @@ const onSubmit = async () => {
 
     switch (loginResult.data.code) {
       case '1000':
+        localStorage.setItem('token', loginResult.data.jwtToken)
+
         $router.push({ name: 'Bookmarks' })
 
         $q.notify({
@@ -33,7 +36,7 @@ const onSubmit = async () => {
           icon: 'cloud_done',
           message: '로그인 성공'
         })
-
+        break
       default:
         $q.dialog({
           title: '회원가입',
