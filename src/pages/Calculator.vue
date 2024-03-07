@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { ref } from 'vue'
+import { axios } from 'src/boot/axios'
+import { onMounted, ref } from 'vue'
 
 const columns: any = [
   {
@@ -23,36 +24,36 @@ const columns: any = [
 ]
 
 const rows: any = ref([
-  {
-    index: 1,
-    name: '한국 (원)',
-    unit: 'KRW',
-    dealBasR: 0,
-    exchangeRate: 0,
-    favorite: true,
-    ttb: 0,
-    tts: 0
-  },
-  {
-    index: 2,
-    name: '미국 (달러)',
-    unit: 'USD',
-    dealBasR: 0,
-    exchangeRate: 0,
-    favorite: true,
-    ttb: 0,
-    tts: 0
-  },
-  {
-    index: 3,
-    name: '일본 (엔)',
-    unit: 'YEN',
-    dealBasR: 0,
-    exchangeRate: 0,
-    favorite: true,
-    ttb: 0,
-    tts: 0
-  }
+  // {
+  //   index: 1,
+  //   name: '한국 (원)',
+  //   unit: 'KRW',
+  //   dealBasR: 0,
+  //   exchangeRate: 0,
+  //   favorite: true,
+  //   ttb: 0,
+  //   tts: 0
+  // },
+  // {
+  //   index: 2,
+  //   name: '미국 (달러)',
+  //   unit: 'USD',
+  //   dealBasR: 0,
+  //   exchangeRate: 0,
+  //   favorite: true,
+  //   ttb: 0,
+  //   tts: 0
+  // },
+  // {
+  //   index: 3,
+  //   name: '일본 (엔)',
+  //   unit: 'YEN',
+  //   dealBasR: 0,
+  //   exchangeRate: 0,
+  //   favorite: true,
+  //   ttb: 0,
+  //   tts: 0
+  // }
 ])
 
 const baseDate = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
@@ -81,6 +82,18 @@ const calcChangedAmount = () => {
     chagnedAmount.value = null
   }
 }
+
+const setData = async () => {
+  const result = await axios.get('/exchange')
+  switch (result.data.code) { 
+    case '1000':
+      rows.value = result.data.exchangeDtoList;
+  }
+}
+
+onMounted(async () => {
+  setData()
+})
 </script>
 
 <template>

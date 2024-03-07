@@ -30,30 +30,30 @@ const columns: any = [
 ]
 
 const rows = ref([
-  {
-    index: 1,
-    name: '한국 (원)',
-    unit: 'KRW',
-    dealBasR: 0,
-    exchangeRate: 0,
-    favorite: true
-  },
-  {
-    index: 2,
-    name: '미국 (달러)',
-    unit: 'USD',
-    dealBasR: 0,
-    exchangeRate: 0,
-    favorite: true
-  },
-  {
-    index: 3,
-    name: '일본 (엔)',
-    unit: 'YEN',
-    dealBasR: 0,
-    exchangeRate: 0,
-    favorite: true
-  }
+  // {
+  //   index: 1,
+  //   name: '한국 (원)',
+  //   unit: 'KRW',
+  //   dealBasR: 0,
+  //   exchangeRate: 0,
+  //   favorite: true
+  // },
+  // {
+  //   index: 2,
+  //   name: '미국 (달러)',
+  //   unit: 'USD',
+  //   dealBasR: 0,
+  //   exchangeRate: 0,
+  //   favorite: true
+  // },
+  // {
+  //   index: 3,
+  //   name: '일본 (엔)',
+  //   unit: 'YEN',
+  //   dealBasR: 0,
+  //   exchangeRate: 0,
+  //   favorite: true
+  // }
 ])
 
 const updateFavorite = (row: any) => {
@@ -62,17 +62,7 @@ const updateFavorite = (row: any) => {
       const indexToRemove = rows.value.findIndex((r) => r === row)
       rows.value.splice(indexToRemove, 1)
       // todo : 디비에서 즐겨찾기 해제
-      // const res = await _updatePackageWithSchedules(packageDto_, scheduleDtos_)
-      // console.log('editPackageWithSchedules', res)
-      // if (res) {
-      //   if (res?.error) {
-      //     console.error(res.error)
-      //     $q.dialog({ title: '알림', message: `실패 ${res.error.toString()}` })
-      //   }
-      //   else {
-      //     router.push({ name: 'Package' })
-      //   }
-      // }
+
     })
     .onCancel(() => {
       row.favorite = true
@@ -80,8 +70,15 @@ const updateFavorite = (row: any) => {
 }
 
 const setData = async () => {
-  const loginResult = await axios.get('/member/fav')
-  console.log(loginResult)
+  const result = await axios.get('/member/fav')
+  switch (result.data.code) { 
+    case '1000':
+
+      rows.value = result.data.memberFavList.map((it: any) => {
+        it.favorite = true
+          return it;
+        })
+  }
 }
 
 onMounted(async () => {
