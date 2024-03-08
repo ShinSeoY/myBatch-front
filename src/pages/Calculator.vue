@@ -5,9 +5,9 @@ import { onMounted, ref } from 'vue'
 
 const columns: any = [
   {
-    name: 'index',
+    name: 'id',
     label: '#',
-    field: 'index'
+    field: 'id'
   },
   {
     name: 'name',
@@ -57,7 +57,7 @@ const rows: any = ref([
 ])
 
 const baseDate = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
-const selected = ref([])
+const selectedFav = ref([])
 const originAmount = ref()
 const chagnedAmount = ref()
 const dense = ref(false)
@@ -69,12 +69,11 @@ const selectOptions: any[] = [
   { name: '중국', unit: 'CNH', dealBasR: 163.65, krUnit: '위엔' }
 ]
 
-const getSelectedString = () => {
-  return selected.value.length === 0 ? '' : `${selected.value.length} record${selected.value.length > 1 ? 's' : ''} selected of ${rows.value.length}`
+const clickFavorite = async () => {
+  console.log(selectedFav.value.map((it:any)=>it.id))
+  await axios.post('/member/fav', selectedFav.value.map((it:any)=>it.id))
 }
-const clickFavorite = () => {
-  console.log(selected)
-}
+
 const calcChangedAmount = () => {
   if (originAmount.value) {
     chagnedAmount.value = originAmount.value / selectedItem.value.dealBasR + ' ' + selectedItem.value.krUnit
@@ -117,16 +116,13 @@ onMounted(async () => {
         :rows="rows"
         :columns="columns"
         row-key="name"
-        :selected-rows-label="getSelectedString"
         selection="multiple"
-        v-model:selected="selected"
+        v-model:selected="selectedFav"
       >
         <template v-slot:top-right>
-          <q-btn icon="add" label="즐겨찾기 추가" @click="clickFavorite()" />
+          <q-btn icon="add" label="즐겨찾기 추가" @click="clickFavorite" />
         </template>
       </q-table>
-
-      <div class="q-mt-md">Selected: {{ JSON.stringify(selected) }}</div>
     </q-page>
   </div>
 </template>

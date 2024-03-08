@@ -9,9 +9,9 @@ const pagination = ref({ rowsPerPage: 0 })
 
 const columns: any = [
   {
-    name: 'index',
+    name: 'id',
     label: '#',
-    field: 'index'
+    field: 'id'
   },
   {
     name: 'name',
@@ -61,8 +61,7 @@ const updateFavorite = (row: any) => {
     .onOk(async () => {
       const indexToRemove = rows.value.findIndex((r) => r === row)
       rows.value.splice(indexToRemove, 1)
-      // todo : 디비에서 즐겨찾기 해제
-
+      await axios.delete(`/member/fav/${row.id}`)
     })
     .onCancel(() => {
       row.favorite = true
@@ -74,7 +73,7 @@ const setData = async () => {
   switch (result.data.code) { 
     case '1000':
 
-      rows.value = result.data.memberFavList.map((it: any) => {
+      rows.value = result.data.memberFavDtoList?.map((it: any) => {
         it.favorite = true
           return it;
         })
