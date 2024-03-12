@@ -70,8 +70,7 @@ const selectOptions: any[] = [
 ]
 
 const clickFavorite = async () => {
-  console.log(selectedFav.value.map((it:any)=>it.id))
-  await axios.post('/member/fav', selectedFav.value.map((it:any)=>it.id))
+  await axios.post('/member/fav', selectedFav.value.map((it:any)=>it.unit))
 }
 
 const calcChangedAmount = () => {

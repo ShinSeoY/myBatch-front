@@ -61,7 +61,7 @@ const updateFavorite = (row: any) => {
     .onOk(async () => {
       const indexToRemove = rows.value.findIndex((r) => r === row)
       rows.value.splice(indexToRemove, 1)
-      await axios.delete(`/member/fav/${row.id}`)
+      await axios.delete(`/member/fav/${row.unit}`)
     })
     .onCancel(() => {
       row.favorite = true
