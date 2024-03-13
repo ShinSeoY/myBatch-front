@@ -102,7 +102,7 @@ onMounted(async () => {
         <div class="base-date" style="text-align: left">기준 날짜 : {{ baseDate }}</div>
         <div class="input-container">
           <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount" />
-          <div class="spacer"></div>
+          <img class="spacer" src="/public/icons/exchange.png">
           <q-input class="custom-input" outlined v-model="chagnedAmount" readonly label="환전 후 금액" :dense="dense" />
           <q-select v-model="selectedItem" :options="selectOptions" option-label="unit" outlined @update:model-value="calcChangedAmount" />
         </div>
@@ -145,12 +145,9 @@ onMounted(async () => {
   margin-bottom: 2%;
 }
 .spacer {
-  width: 10%;
-  height: 40px;
-  background-image: url('/public/icons/exchange.png'); /* 화살표 이미지 경로 설정 */
-  background-size: contain;
-  background-repeat: no-repeat;
-  margin: 8px 8px;
+  width: 50px; 
+  height: 50px; 
+  margin: 0px 20px;
 }
 .input-container {
   display: flex;
