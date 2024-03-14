@@ -1,81 +1,48 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import { useQuasar } from 'quasar'
 import { axios } from 'src/boot/axios'
 import { onMounted, ref } from 'vue'
 
+const $q = useQuasar()
+
 const columns: any = [
-  {
-    name: 'id',
-    label: '#',
-    field: 'id'
-  },
-  {
-    name: 'name',
-    required: true,
-    label: '', // 나라명 + 통화명 ex) 한국(원), 미국(달러) ..
-    align: 'left',
-    field: (row: any) => row.name
-  },
-  { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.unit }, //ex) USD, KRW, ..
-  { name: 'dealBasR', label: '거래 기준 환율', field: (row: any) => row.dealBasR },
-  { name: 'exchangeRate', label: 'Exchange Rate Per 1000 KRW', field: (row: any) => row.exchangeRate }, // = 전환금액/거래기준환율
+  { name: 'name', label: '국가명', align: 'center', field: (row: any) => row.name },
+  { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.unit },
+  { name: 'dealBasR', align: 'right', label: '거래 기준 환율', field: (row: any) => row.dealBasR },
+  { name: 'exchangeRate', align: 'right', label: 'Exchange Rate Per 1000 KRW', field: (row: any) => row.exchangeRate + `  ${row.krUnit}` }, // = 전환금액/거래기준환율
   { name: 'ttb', label: '전신외환 살 때 환율', field: (row: any) => row.ttb },
   { name: 'tts', label: '전신외환 팔 때 환율', field: (row: any) => row.tts }
 ]
 
-const rows: any = ref([
-  // {
-  //   index: 1,
-  //   name: '한국 (원)',
-  //   unit: 'KRW',
-  //   dealBasR: 0,
-  //   exchangeRate: 0,
-  //   favorite: true,
-  //   ttb: 0,
-  //   tts: 0
-  // },
-  // {
-  //   index: 2,
-  //   name: '미국 (달러)',
-  //   unit: 'USD',
-  //   dealBasR: 0,
-  //   exchangeRate: 0,
-  //   favorite: true,
-  //   ttb: 0,
-  //   tts: 0
-  // },
-  // {
-  //   index: 3,
-  //   name: '일본 (엔)',
-  //   unit: 'YEN',
-  //   dealBasR: 0,
-  //   exchangeRate: 0,
-  //   favorite: true,
-  //   ttb: 0,
-  //   tts: 0
-  // }
-])
+const rows: any = ref([])
 
 const baseDate = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
 const selectedFav = ref([])
 const originAmount = ref()
 const chagnedAmount = ref()
 const dense = ref(false)
-const selectedItem = ref({ name: '미국', unit: 'USD', dealBasR: 1066.9, krUnit: '달러' })
-const selectOptions: any[] = [
-  { name: '한국', unit: 'KRW', dealBasR: 1, krUnit: '원' },
-  { name: '미국', unit: 'USD', dealBasR: 1066.9, krUnit: '달러' },
-  { name: '태국', unit: 'THB', dealBasR: 32.9, krUnit: '바트' },
-  { name: '중국', unit: 'CNH', dealBasR: 163.65, krUnit: '위엔' }
-]
+const selectedItem = ref()
+const selectOptions: any = ref([])
 
 const clickFavorite = async () => {
-  await axios.post('/member/fav', selectedFav.value.map((it:any)=>it.unit))
+  $q.dialog({ title: '알림', message: '즐겨찾기에 추가하시겠습니까?', ok: '예', cancel: '아니오' }).onOk(async () => {
+    await axios.post(
+      '/member/fav',
+      selectedFav.value.map((it: any) => it.unit)
+    )
+    selectedFav.value = []
+  })
 }
 
 const calcChangedAmount = () => {
   if (originAmount.value) {
-    chagnedAmount.value = originAmount.value / selectedItem.value.dealBasR + ' ' + selectedItem.value.krUnit
+    let times = 1
+    // 일본, 인도네시아는 * 100
+    if (['IDR', 'JPY'].includes(selectedItem.value.unit)) {
+      times = 100
+    }
+    chagnedAmount.value = Math.floor((originAmount.value / selectedItem.value.dealBasR) * times * 100) / 100.0 + ' ' + selectedItem.value.krUnit
   } else {
     chagnedAmount.value = null
   }
@@ -83,9 +50,17 @@ const calcChangedAmount = () => {
 
 const setData = async () => {
   const result = await axios.get('/exchange')
-  switch (result.data.code) { 
+  switch (result.data.code) {
     case '1000':
-      rows.value = result.data.exchangeDtoList;
+      baseDate.value = dayjs(result.data.exchangeDtoList[0]?.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+      rows.value = result.data.exchangeDtoList
+      selectOptions.value = result.data.exchangeDtoList.map((it: any) => {
+        const name = it.unit == 'EUR' ? it.name : it.name + ' ' + it.krUnit
+        if (it.unit == 'USD') {
+          selectedItem.value = { name: name, unit: it.unit, dealBasR: it.dealBasR, krUnit: it.krUnit }
+        }
+        return { name: name, unit: it.unit, dealBasR: it.dealBasR, krUnit: it.krUnit }
+      })
   }
 }
 
@@ -102,22 +77,13 @@ onMounted(async () => {
         <div class="base-date" style="text-align: left">기준 날짜 : {{ baseDate }}</div>
         <div class="input-container">
           <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount" />
-          <img class="spacer" src="/public/icons/exchange.png">
+          <img class="spacer" src="/icons/exchange.png" />
           <q-input class="custom-input" outlined v-model="chagnedAmount" readonly label="환전 후 금액" :dense="dense" />
-          <q-select v-model="selectedItem" :options="selectOptions" option-label="unit" outlined @update:model-value="calcChangedAmount" />
+          <q-select v-model="selectedItem" :options="selectOptions" option-label="name" outlined @update:model-value="calcChangedAmount" />
         </div>
       </div>
 
-      <q-table
-        flat
-        bordered
-        title="오늘의 환율"
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-        selection="multiple"
-        v-model:selected="selectedFav"
-      >
+      <q-table flat bordered title="오늘의 환율" :rows="rows" :columns="columns" row-key="name" selection="multiple" v-model:selected="selectedFav">
         <template v-slot:top-right>
           <q-btn icon="add" label="즐겨찾기 추가" @click="clickFavorite" />
         </template>
@@ -145,8 +111,8 @@ onMounted(async () => {
   margin-bottom: 2%;
 }
 .spacer {
-  width: 50px; 
-  height: 50px; 
+  width: 50px;
+  height: 50px;
   margin: 0px 20px;
 }
 .input-container {
