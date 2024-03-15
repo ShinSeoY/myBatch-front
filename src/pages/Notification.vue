@@ -59,7 +59,7 @@ const setData = async () => {
   switch (result.data.code) {
     case '1000':
       selectOptions.value = result.data.exchangeDtoList.map((it: any) => {
-        const name = it.unit == 'EUR' ? it.name : it.name + ' ' + it.krUnit + `(${it.unit})`
+        const name = it.unit == 'EUR' ? it.name + `(${it.unit})` : it.name + ' ' + it.krUnit + `(${it.unit})`
         if (it.unit == 'USD') {
           selectedItem.value = { name: name, unit: it.unit, dealBasR: it.dealBasR + '원', krUnit: it.krUnit }
         }
@@ -76,7 +76,7 @@ onMounted(async () => {
 <template>
   <div id="app">
     <q-page class="q-pa-md">
-      <div class="q-pa-md child" style="max-width: 800px">
+      <div class="q-pa-md child" style="min-width: 800px">
         <div class="notice-form">
           <div class="notice">
             <div class="notice_title">목표환율 알림 서비스</div>
@@ -149,9 +149,10 @@ onMounted(async () => {
 }
 
 .notice-form {
-  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 5px;
   padding: 20px;
+  max-width: 768px;
 }
 
 .notice {

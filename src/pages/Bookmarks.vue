@@ -51,24 +51,15 @@ onMounted(async () => {
 <template>
   <div id="app">
     <q-page class="q-pa-md">
-      <q-table
-        style="height: 400px"
-        flat
-        bordered
-        title="내 관심 환율"
-        :rows="rows"
-        :columns="columns"
-        row-key="index"
-        virtual-scroll
-        v-model:pagination="pagination"
-        :rows-per-page-options="[0]"
-      >
-        <template v-slot:body-cell-favorite="props">
-          <q-td :props="props">
-            <q-toggle v-model="props.row.favorite" @click="updateFavorite(props.row)" />
-          </q-td>
-        </template>
-      </q-table>
+      <div class="q-pa-md child" style="min-width: 800px">
+        <q-table flat bordered title="관심 환율" :rows="rows" :columns="columns" row-key="index" virtual-scroll v-model:pagination="pagination" :rows-per-page-options="[0]">
+          <template v-slot:body-cell-favorite="props">
+            <q-td :props="props">
+              <q-toggle v-model="props.row.favorite" @click="updateFavorite(props.row)" />
+            </q-td>
+          </template>
+        </q-table>
+      </div>
     </q-page>
   </div>
 </template>
@@ -77,13 +68,19 @@ onMounted(async () => {
 #app {
   text-align: center;
   color: #2c3e50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .q-table__title {
+  color: #2c3e50;
   text-align: left;
   font-size: 27px;
   letter-spacing: 0.005em;
   font-weight: bold;
-  margin-bottom: 2%;
+  min-width: 300px;
+  margin: 4% 3%;
 }
 </style>

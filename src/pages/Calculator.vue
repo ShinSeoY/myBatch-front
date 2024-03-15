@@ -71,23 +71,25 @@ onMounted(async () => {
 
 <template>
   <div id="app">
-    <q-page class="q-pa-md parent-container">
-      <div class="calc">
-        <div class="calc_title">환율 계산기</div>
-        <div class="base-date" style="text-align: left">기준 날짜 : {{ baseDate }}</div>
-        <div class="input-container">
-          <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount" />
-          <img class="spacer" src="/icons/exchange.png" />
-          <q-input class="custom-input" outlined v-model="chagnedAmount" disable readonly label="환전 후 금액" :dense="dense" />
-          <q-select v-model="selectedItem" :options="selectOptions" option-label="name" outlined @update:model-value="calcChangedAmount" />
+    <q-page class="q-pa-md">
+      <div class="q-pa-md child" style="min-width: 800px">
+        <div class="calc">
+          <div class="calc_title">환율 계산기</div>
+          <div class="base-date" style="text-align: left">기준 날짜 : {{ baseDate }}</div>
+          <div class="input-container">
+            <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount" />
+            <img class="spacer" src="/icons/exchange.png" />
+            <q-input class="custom-input" outlined v-model="chagnedAmount" disable readonly label="환전 후 금액" :dense="dense" />
+            <q-select v-model="selectedItem" :options="selectOptions" option-label="name" outlined @update:model-value="calcChangedAmount" />
+          </div>
         </div>
-      </div>
 
-      <q-table flat bordered title="오늘의 환율" :rows="rows" :columns="columns" row-key="name" selection="multiple" v-model:selected="selectedFav">
-        <template v-slot:top-right>
-          <q-btn icon="add" label="즐겨찾기 추가" @click="clickFavorite" />
-        </template>
-      </q-table>
+        <q-table flat bordered title="오늘의 환율" :rows="rows" :columns="columns" row-key="name" selection="multiple" v-model:selected="selectedFav">
+          <template v-slot:top-right>
+            <q-btn icon="add" label="즐겨찾기 추가" @click="clickFavorite" />
+          </template>
+        </q-table>
+      </div>
     </q-page>
   </div>
 </template>
@@ -96,11 +98,25 @@ onMounted(async () => {
 #app {
   text-align: center;
   color: #2c3e50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
+
+.q-table__title {
+  color: #2c3e50;
+  text-align: left;
+  font-size: 27px;
+  letter-spacing: 0.005em;
+  font-weight: bold;
+  margin-bottom: 2%;
+}
+
 .calc {
   border: 1px solid rgba(0, 0, 0, 0.12);
-  padding: 1%;
-  margin-top: 5%;
+  border-radius: 5px;
+  padding: 3%;
   margin-bottom: 5%;
 }
 .calc_title {
