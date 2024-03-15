@@ -18,7 +18,7 @@ const tab = ref('bookmarks')
         <q-tabs v-model="tab">
           <q-route-tab to="/bookmarks" name="bookmarks" label="관심 환율" />
           <q-route-tab to="/calculator" name="calculator" label="환율 계산기" />
-          <q-route-tab to="/notification" name="notification" label="알림 설정" />
+          <q-route-tab to="/notification" name="notification" label="알림 서비스" />
         </q-tabs>
       </q-header>
 

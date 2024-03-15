@@ -78,4 +78,12 @@ onMounted(async () => {
   text-align: center;
   color: #2c3e50;
 }
+
+.q-table__title {
+  text-align: left;
+  font-size: 27px;
+  letter-spacing: 0.005em;
+  font-weight: bold;
+  margin-bottom: 2%;
+}
 </style>

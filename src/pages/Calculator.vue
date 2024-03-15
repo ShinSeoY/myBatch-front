@@ -11,8 +11,8 @@ const columns: any = [
   { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.unit },
   { name: 'dealBasR', align: 'right', label: '거래 기준 환율', field: (row: any) => row.dealBasR },
   { name: 'exchangeRate', align: 'right', label: 'Exchange Rate Per 1000 KRW', field: (row: any) => row.exchangeRate + `  ${row.krUnit}` }, // = 전환금액/거래기준환율
-  { name: 'ttb', label: '전신외환 살 때 환율', field: (row: any) => row.ttb },
-  { name: 'tts', label: '전신외환 팔 때 환율', field: (row: any) => row.tts }
+  { name: 'ttb', label: '송금 받을 때 환율', field: (row: any) => row.ttb },
+  { name: 'tts', label: '송금 보낼 때 환율', field: (row: any) => row.tts }
 ]
 
 const rows: any = ref([])
@@ -78,7 +78,7 @@ onMounted(async () => {
         <div class="input-container">
           <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount" />
           <img class="spacer" src="/icons/exchange.png" />
-          <q-input class="custom-input" outlined v-model="chagnedAmount" readonly label="환전 후 금액" :dense="dense" />
+          <q-input class="custom-input" outlined v-model="chagnedAmount" disable readonly label="환전 후 금액" :dense="dense" />
           <q-select v-model="selectedItem" :options="selectOptions" option-label="name" outlined @update:model-value="calcChangedAmount" />
         </div>
       </div>
@@ -105,9 +105,9 @@ onMounted(async () => {
 }
 .calc_title {
   text-align: left;
-  font-size: 20px;
+  font-size: 27px;
   letter-spacing: 0.005em;
-  font-weight: 400;
+  font-weight: bold;
   margin-bottom: 2%;
 }
 .spacer {
