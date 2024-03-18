@@ -28,6 +28,8 @@ const onSubmit = async () => {
       case '1000':
         localStorage.setItem('token', loginResult.data.jwtToken)
 
+        axios.defaults.headers.common['Authorization'] = `Bearer ${loginResult.data.jwtToken}`
+
         $router.push({ name: 'Bookmarks' })
 
         $q.notify({

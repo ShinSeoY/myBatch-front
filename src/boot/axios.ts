@@ -7,18 +7,56 @@ declare module '@vue/runtime-core' {
   }
 }
 
-// Be careful when using SSR for cross-request state pollution
-// due to creating a Singleton instance here;
-// If any client changes this (global) instance, it might be a
-// good idea to move this instance creation inside of the
-// "export default () => {}" function below (which runs individually
-// for each client)
-const axios = _axios.create({ baseURL: import.meta.env.VITE_APP_BACKEND_URI })
+const axios = _axios.create({
+  baseURL: import.meta.env.VITE_APP_BACKEND_URI,
+    headers: {
+    'Content-Type': 'application/json',
+  },
+})
 
-const token = localStorage.getItem('token')
-if (token) {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+  if (token) {
+  config.headers.Authorization = `Bearer ${token}`
 }
+  return config
+})
+
+axios.interceptors.response.use(
+  success => {
+  return success
+  }, 
+  error => {
+    console.log(error)
+    const errorCode = error.response.data.code
+    console.log(errorCode)
+    switch (errorCode) {
+      case 'E003':
+        console.log('invalid token=======')
+        break;
+      // case 401: {
+      //   onError(status, '인증 실패입니다.');
+      //   break;
+      // }
+      // case 403: {
+      //   onError(status, '권한이 없습니다.');
+      //   break;
+      // }
+      // case 404: {
+      //   onError(status, '찾을 수 없는 페이지입니다.');
+      //   break;
+      // }
+      // case 500: {
+      //   onError(status, '서버 오류입니다.');
+      //   break;
+      // }
+      default: {
+        console.log('-----oter')
+      }
+    }
+    return Promise.reject(error);
+})
+
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
