@@ -13,7 +13,8 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'Login',
         path: 'login',
-        component: () => import('pages/Login.vue')
+        component: () => import('pages/Login.vue'),
+        meta: { noRequireAuth: true }
       }
     ]
   },
@@ -21,6 +22,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'defaultLayout',
     component: () => import('layouts/DefaultLayout.vue'),
+    meta: { requiredAuth: true },
     children: [
       {
         name: 'Bookmarks',
