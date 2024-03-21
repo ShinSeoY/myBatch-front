@@ -9,7 +9,7 @@ declare module '@vue/runtime-core' {
 
 const axios = _axios.create({
   baseURL: import.meta.env.VITE_APP_BACKEND_URI,
-    headers: {
+  headers: {
     'Content-Type': 'application/json',
   },
 })
@@ -17,22 +17,23 @@ const axios = _axios.create({
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {
-  config.headers.Authorization = `Bearer ${token}`
-}
+    config.headers.Authorization = `Bearer ${token}`
+  }
   return config
 })
 
 axios.interceptors.response.use(
   success => {
-  return success
+    return success
   }, 
   error => {
-    console.log(error)
     const errorCode = error.response.data.code
-    console.log(errorCode)
     switch (errorCode) {
+      case 'E006':
       case 'E003':
-        console.log('invalid token=======')
+        console.log(errorCode + ` (${error.response.data.message})`)
+        localStorage.setItem('token', '')
+        window.location.href = '/';
         break;
       // case 401: {
       //   onError(status, '인증 실패입니다.');
@@ -51,7 +52,8 @@ axios.interceptors.response.use(
       //   break;
       // }
       default: {
-        console.log('-----oter')
+        console.log(errorCode + ` (${error.response.data.message})`)
+        // window.location.href = '/';
       }
     }
     return Promise.reject(error);

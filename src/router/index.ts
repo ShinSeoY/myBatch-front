@@ -21,15 +21,15 @@ export default route(function (/* { store, ssrContext } */) {
     routes: routes
   })
 
-  const verifyToken = async (token: string): Promise<boolean> => {
-    const isAuth = await axios.post('/verify-token', { token: token })
-    return isAuth.data;
+  const isValidToken = async (token: any): Promise<boolean> => {
+    const res = await axios.post('/member/verify-token', token)
+    return res?.data;
   }
 
   Router.beforeEach(async (to, from, next) => {
     const token = localStorage.getItem('token');
 
-    if ((!token || (await verifyToken(token))) && !to.meta.noRequireAuth) {
+    if ((!token || !(await isValidToken(token))) && !to.meta.noRequireAuth) {
         return next({ name: 'Login' })
     }
     return next()
