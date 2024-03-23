@@ -40,7 +40,11 @@ const onSubmit = () => {
       cancel: '아니오',
       html: true
     }).onOk(async () => {
-      const result = await axios.post('/member/notification', notificationSelection.value)
+      const result = await axios.post('/member/notification', {
+        goalExchangeRate: goalExchangeRate.value,
+        calcType: calcTypeItem.value.value,
+        enabledNotificatonList: notificationSelection.value
+      })
       switch (result.data.code) {
         case '1000':
           $q.notify({
@@ -52,11 +56,6 @@ const onSubmit = () => {
       }
     })
   }
-
-  console.log(selectedItem.value.unit)
-  console.log(goalExchangeRate.value)
-  console.log(notificationSelection.value)
-  console.log(notificationSelection.value.length)
 }
 
 const setData = async () => {
@@ -102,6 +101,9 @@ onMounted(async () => {
               </li>
               <li>환율알림서비스를 받은 시점과 고객님의 거래 시점의 환율은 다를 수 있으므로 실거래 시 꼭 확인 부탁드립니다.</li>
             </ul>
+          </div>
+          <div>
+            <h5 style="font-weight: bold">나의 알림 서비스</h5>
           </div>
           <h5 style="font-weight: bold">목표환율 알림 설정</h5>
           <q-form class="q-gutter-md">
