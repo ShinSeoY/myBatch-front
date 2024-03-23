@@ -41,6 +41,7 @@ const onSubmit = () => {
       html: true
     }).onOk(async () => {
       const result = await axios.post('/member/notification', {
+        unit: selectedItem.value.unit,
         goalExchangeRate: goalExchangeRate.value,
         calcType: calcTypeItem.value.value,
         enabledNotificatonList: notificationSelection.value
