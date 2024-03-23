@@ -5,9 +5,6 @@ import { onMounted, ref } from 'vue'
 
 const $q = useQuasar()
 
-const name = ref(null)
-const age = ref(null)
-const accept = ref(false)
 const selectedItem: any = ref({ dealBasR: 0 })
 const selectOptions: any = ref([])
 const goalExchangeRate: any = ref()
@@ -16,42 +13,50 @@ const calcTypeOptions: any = [
   { name: '이상', value: 'gte' },
   { name: '이하', value: 'lte' }
 ]
-
-// const updateGoalExchangeRate = () => {
-//     if (goalExchangeRate.value !== null) {
-//       // let value = parseFloat(goalExchangeRate.value).toFixed(2);
-//       console.log(goalExchangeRate.value.toString().split('.')[1]?.length)
-//       if (goalExchangeRate.value.toString().split('.')[1]?.length > 2) {
-//         console.log('come')
-//         goalExchangeRate.value = parseFloat(goalExchangeRate.value).toFixed(2)
-
-//       }
-//     }
-// }
+const notificationSelection: any = ref([])
 
 const onSubmit = () => {
-  // todo 목표환율 소수점 자리수 확인
-  if (accept.value !== true) {
+  if (!goalExchangeRate.value) {
     $q.notify({
+      timeout: 2000,
       color: 'red-5',
       textColor: 'white',
       icon: 'warning',
-      message: 'You need to accept the license and terms first'
+      message: '목표환율을 입력해주세요'
+    })
+  } else if (notificationSelection.value.length < 1) {
+    $q.notify({
+      timeout: 2000,
+      color: 'red-5',
+      textColor: 'white',
+      icon: 'warning',
+      message: '알림 받으실 서비스를 한가지 이상 선택하세요'
     })
   } else {
-    $q.notify({
-      color: 'green-4',
-      textColor: 'white',
-      icon: 'cloud_done',
-      message: 'Submitted'
+    $q.dialog({
+      title: '알림',
+      message: '알림 서비스를 설정하시겠습니까?',
+      ok: '예',
+      cancel: '아니오',
+      html: true
+    }).onOk(async () => {
+      const result = await axios.post('/member/notification', notificationSelection.value)
+      switch (result.data.code) {
+        case '1000':
+          $q.notify({
+            color: 'green-4',
+            textColor: 'white',
+            icon: 'cloud_done',
+            message: '알림 설정 완료'
+          })
+      }
     })
   }
-}
 
-const onReset = () => {
-  name.value = null
-  age.value = null
-  accept.value = false
+  console.log(selectedItem.value.unit)
+  console.log(goalExchangeRate.value)
+  console.log(notificationSelection.value)
+  console.log(notificationSelection.value.length)
 }
 
 const setData = async () => {
@@ -99,9 +104,10 @@ onMounted(async () => {
             </ul>
           </div>
           <h5 style="font-weight: bold">목표환율 알림 설정</h5>
-          <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+          <q-form class="q-gutter-md">
             <p class="setting-sub-title">통화</p>
             <q-select filled v-model="selectedItem" :options="selectOptions" option-label="name" />
+
             <p class="setting-sub-title">현재고시환율</p>
             <q-input filled v-model="selectedItem.dealBasR" label="현재고시환율" disable readonly />
 
@@ -120,8 +126,14 @@ onMounted(async () => {
               <q-select class="goalSetting-item" filled v-model="calcTypeItem" :options="calcTypeOptions" option-label="name" />
             </div>
 
-            <div>
-              <q-btn label="알림 설정" type="submit" color="primary" />
+            <p class="setting-sub-title">알림 받으실 서비스 ( 중복 체크 가능 )</p>
+            <div class="notification-container">
+              <q-checkbox class="notification-checkbox" v-model="notificationSelection" val="sms" label="SMS" />
+              <q-checkbox class="notification-checkbox" v-model="notificationSelection" val="email" label="EMAIL" />
+            </div>
+
+            <div class="setting-btn-container">
+              <q-btn class="setting-btn" label="알림 설정" type="submit" color="primary" @click="onSubmit" />
             </div>
           </q-form>
         </div>
@@ -206,5 +218,23 @@ onMounted(async () => {
 .goalSetting-item:last-child {
   max-width: 20%;
   margin-right: 0; /* 마지막 요소의 오른쪽 마진 제거 */
+}
+
+.notification-container {
+  flex-grow: 1; /* 부모 크기에 맞게 채워짐 */
+  margin-bottom: 50px;
+}
+
+.notification-checkbox {
+  margin-right: 40px;
+}
+
+.setting-btn-container {
+  display: flex;
+}
+
+.setting-btn {
+  font-size: large;
+  flex-grow: 1;
 }
 </style>
