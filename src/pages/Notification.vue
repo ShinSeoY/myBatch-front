@@ -14,6 +14,8 @@ const calcTypeOptions: any = [
   { name: '이하', value: 'lte' }
 ]
 const notificationSelection: any = ref([])
+const myNotification: any = ref({})
+const isVisible = ref(false)
 
 const onSubmit = () => {
   if (!goalExchangeRate.value) {
@@ -71,6 +73,12 @@ const setData = async () => {
         return { name: name, unit: it.unit, dealBasR: it.dealBasR + '원', krUnit: it.krUnit }
       })
   }
+  const myNotificationResult = await axios.get('/member/notification')
+  switch (myNotificationResult.data.code) {
+    case '1000':
+      myNotification.value = myNotificationResult.data.result
+      isVisible.value = true
+  }
 }
 
 onMounted(async () => {
@@ -101,10 +109,19 @@ onMounted(async () => {
                 신청하시기 바랍니다.
               </li>
               <li>환율알림서비스를 받은 시점과 고객님의 거래 시점의 환율은 다를 수 있으므로 실거래 시 꼭 확인 부탁드립니다.</li>
+              <li>기존에 설정하신 알림이 있다면 기존 설정은 초기화되고 새로운 알림으로 다시 설정됩니다.</li>
             </ul>
           </div>
-          <div>
-            <h5 style="font-weight: bold">나의 알림 서비스</h5>
+          <div v-if="isVisible" style="margin-bottom: 80px">
+            <h5 style="font-weight: bold; margin-bottom: 20px">설정된 알림 서비스</h5>
+            <div>
+              <p style="font-size: large; font-weight: bold">
+                ✔️ 🔔 {{ myNotification.unit }} : {{ myNotification.goalExchangeRate }} {{ myNotification.calcType == 'LTE' ? '이상' : '이하' }} ({{
+                  myNotification.smsEnabled ? 'SMS & ' : ''
+                }}
+                {{ myNotification.emailEnabled ? 'EMAIL' : '' }})
+              </p>
+            </div>
           </div>
           <h5 style="font-weight: bold">목표환율 알림 설정</h5>
           <q-form class="q-gutter-md">
