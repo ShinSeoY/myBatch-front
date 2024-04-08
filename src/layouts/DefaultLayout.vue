@@ -1,7 +1,7 @@
 <template>
   <div>
     <CommonLayout></CommonLayout>
-    <CommonFooter></CommonFooter>
+    <!-- <CommonFooter></CommonFooter> -->
   </div>
 </template>
 
