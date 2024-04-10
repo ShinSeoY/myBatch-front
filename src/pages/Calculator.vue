@@ -24,6 +24,10 @@ const chagnedAmount = ref()
 const dense = ref(false)
 const selectedItem = ref()
 const selectOptions: any = ref([])
+const currentPage = ref(1)
+const totalCnt = ref()
+const pageCnt = ref(0)
+const perPage = 5
 
 const clickFavorite = async () => {
   $q.dialog({ title: '알림', message: '즐겨찾기에 추가하시겠습니까?', ok: '예', cancel: '아니오' }).onOk(async () => {
@@ -48,13 +52,23 @@ const calcChangedAmount = () => {
   }
 }
 
-const setData = async () => {
-  const result = await axios.get('/exchange')
-  switch (result.data.code) {
+const paging = async (n: number) => {
+  currentPage.value = n
+  await setData(true)
+}
+
+const setData = async (isCache = false) => {
+  const resultByPage = await axios.post('/exchange', {
+    currentPage: currentPage.value,
+    perPage: perPage
+  })
+  const totalCntRes = await axios.get('/exchange/count')
+  totalCnt.value = totalCntRes.data
+  switch (resultByPage.data.code) {
     case '1000':
-      baseDate.value = dayjs(result.data.exchangeDtoList[0]?.updatedAt).format('YYYY-MM-DD HH:mm:ss')
-      rows.value = result.data.exchangeDtoList
-      selectOptions.value = result.data.exchangeDtoList.map((it: any) => {
+      baseDate.value = dayjs(resultByPage.data.exchangeDtoList[0]?.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+      rows.value = resultByPage.data.exchangeDtoList
+      selectOptions.value = resultByPage.data.exchangeDtoList.map((it: any) => {
         const name = it.unit == 'EUR' ? it.name : it.name + ' ' + it.krUnit
         if (it.unit == 'USD') {
           selectedItem.value = { name: name, unit: it.unit, dealBasR: it.dealBasR, krUnit: it.krUnit }
@@ -62,6 +76,7 @@ const setData = async () => {
         return { name: name, unit: it.unit, dealBasR: it.dealBasR, krUnit: it.krUnit }
       })
   }
+  pageCnt.value = Math.ceil(totalCnt.value / perPage)
 }
 
 onMounted(async () => {
@@ -84,11 +99,27 @@ onMounted(async () => {
           </div>
         </div>
 
-        <q-table flat bordered title="오늘의 환율" :rows="rows" :columns="columns" row-key="name" selection="multiple" v-model:selected="selectedFav">
-          <template v-slot:top-right>
-            <q-btn icon="add" label="즐겨찾기 추가" @click="clickFavorite" />
-          </template>
-        </q-table>
+        <div>
+          <q-table
+            flat
+            bordered
+            hide-pagination
+            :rows-per-page-options="[0]"
+            title="오늘의 환율"
+            :rows="rows"
+            :columns="columns"
+            row-key="name"
+            selection="multiple"
+            v-model:selected="selectedFav"
+          >
+            <template v-slot:top-right>
+              <q-btn icon="add" label="즐겨찾기 추가" @click="clickFavorite" />
+            </template>
+          </q-table>
+        </div>
+        <div class="q-pa-lg flex flex-center">
+          <q-pagination v-model="currentPage" :max="pageCnt" :max-pages="5" direction-links boundary-links @update:model-value="paging" />
+        </div>
       </div>
     </q-page>
   </div>
@@ -140,5 +171,8 @@ onMounted(async () => {
   margin-right: auto;
   margin-left: auto;
   margin-bottom: 50px;
+}
+.pagination-container {
+  justify-content: center; /* 수평 가운데 정렬 */
 }
 </style>
