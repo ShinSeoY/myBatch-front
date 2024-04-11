@@ -95,9 +95,9 @@ onMounted(async () => {
             <div class="notice_title">목표환율 알림 서비스</div>
             <p class="notice-sub-title">목표환율 알림 서비스란?</p>
             <p class="notice-content">일정 기간 내에 고객님께서 등록하신 매매 기준 환율에 도달하는 경우, 문자메시지 또는 이메일로 고객님께 안내 드리는 서비스!</p>
-            <p class="notice-sub-title">신청유효기간은</p>
+            <p class="notice-sub-title">신청유효기간</p>
             <p class="notice-content">신청일로부터 3개월 (3개월 경과 시, 서비스 자동종료)</p>
-            <p class="notice-sub-title">알림시간과 방법은</p>
+            <p class="notice-sub-title">알림시간과 방법</p>
             <p class="notice-content">
               알림을 설장한 다음날 오전 9시부터 오후 5시까지 매 시간마다 목표환율과 현재 환율을 비교하여 목표 달성시 알림문자메시지(SMS) 또는 이메일 1회 안내
             </p>
@@ -171,6 +171,11 @@ onMounted(async () => {
   align-items: center;
   height: 100%;
 }
+.q-pa-md.child {
+  width: 100%;
+  margin: auto;
+  justify-content: center;
+}
 
 .notice_title {
   text-align: left;
@@ -181,10 +186,10 @@ onMounted(async () => {
 }
 
 .notice-form {
+  flex: 1;
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 5px;
   padding: 20px;
-  max-width: 768px;
 }
 
 .notice {

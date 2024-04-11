@@ -87,18 +87,25 @@ onMounted(async () => {
 <template>
   <div id="app">
     <q-page class="q-pa-md">
-      <div class="q-pa-md child" style="min-width: 800px">
+      <div class="q-pa-md child">
         <div class="calc">
           <div class="calc_title">환율 계산기</div>
           <div class="base-date" style="text-align: left">기준 날짜 : {{ baseDate }}</div>
           <div class="input-container">
-            <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount" />
-            <img class="spacer" src="/icons/exchange.png" />
-            <q-input class="custom-input" outlined v-model="chagnedAmount" disable readonly label="환전 후 금액" :dense="dense" />
-            <q-select v-model="selectedItem" :options="selectOptions" option-label="name" outlined @update:model-value="calcChangedAmount" />
+            <div class="input-div">
+              <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount" />
+            </div>
+            <div class="input-div img">
+              <img class="spacer" src="/icons/exchange.png" />
+            </div>
+            <div class="input-div">
+              <q-input class="custom-input" outlined v-model="chagnedAmount" disable readonly label="환전 후 금액" :dense="dense" />
+            </div>
+            <div class="input-div select">
+              <q-select calss="custom-input" v-model="selectedItem" :options="selectOptions" option-label="name" outlined @update:model-value="calcChangedAmount" />
+            </div>
           </div>
         </div>
-
         <div>
           <q-table
             flat
@@ -135,6 +142,15 @@ onMounted(async () => {
   height: 100%;
 }
 
+.q-page {
+  padding-left: auto;
+}
+
+.q-pa-md {
+  width: 100%;
+  margin: auto;
+}
+
 .q-table__title {
   color: #2c3e50;
   text-align: left;
@@ -164,13 +180,39 @@ onMounted(async () => {
 }
 .input-container {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.input-div {
+  flex: 1;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-div.img {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  margin: 20px;
+}
+
+.input-div.select {
+  flex-grow: 0.5;
+}
+
+@media screen and (max-width: 600px) {
+  .input-div {
+    flex-basis: 100%;
+  }
 }
 .custom-input {
-  width: 40%;
   flex: 1;
   margin-right: auto;
   margin-left: auto;
-  margin-bottom: 50px;
+  width: 100%;
+  min-width: 200px;
 }
 .pagination-container {
   justify-content: center; /* 수평 가운데 정렬 */

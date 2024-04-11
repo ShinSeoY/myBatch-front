@@ -51,7 +51,7 @@ onMounted(async () => {
 <template>
   <div id="app">
     <q-page class="q-pa-md">
-      <div class="q-pa-md child" style="min-width: 800px">
+      <div class="q-pa-md child">
         <q-table flat bordered title="관심 환율" :rows="rows" :columns="columns" row-key="index" virtual-scroll v-model:pagination="pagination" :rows-per-page-options="[0]">
           <template v-slot:body-cell-favorite="props">
             <q-td :props="props">
@@ -72,6 +72,14 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+.q-page {
+  padding-left: auto;
+}
+
+.q-pa-md {
+  width: 100%;
+  margin: auto;
 }
 
 .q-table__title {
