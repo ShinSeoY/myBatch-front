@@ -42,7 +42,7 @@ const clickFavorite = async () => {
 const calcChangedAmount = () => {
   if (originAmount.value) {
     let times = 1
-    // 일본, 인도네시아는 * 100
+    // 일본, 인도네시아 => * 100
     if (['IDR', 'JPY'].includes(selectedItem.value.unit)) {
       times = 100
     }
