@@ -11,7 +11,7 @@
 const { Notify } = require('quasar')
 const { configure } = require('quasar/wrappers')
 
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function (ctx) {
   return {
     eslint: {
       // fix: true,
@@ -49,19 +49,20 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
+      env: require('dotenv').config().parsed,
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node16'
       },
 
-      vueRouterMode: 'hash' // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      // publicPath: '/',
+      publicPath: '/'
       // analyze: true,
       // env: {},
       // rawDefine: {}
@@ -82,9 +83,14 @@ module.exports = configure(function (/* ctx */) {
     devServer: {
       // https: true
       open: true, // opens browser window automatically
-      port: 9000,
+      port: process.env.APP_MODE == 'local' ? 3000 : 3002,
       proxy: {
-        '/api': 'http://localhost:8080'
+        '/api': {
+          target: process.env.APP_MODE == 'local' ? 'http://localhost:8080' : 'http://localhost:8082',
+          changeOrigin: true
+          // ,
+          // rewrite: (path) => path.replace(/^\/api/, '')
+        }
       }
     },
 
