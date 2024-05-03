@@ -116,7 +116,7 @@ onMounted(async () => {
             <h5 style="font-weight: bold; margin-bottom: 20px">설정된 알림 서비스</h5>
             <div>
               <p style="font-size: large; font-weight: bold">
-                ✔️ 🔔 {{ myNotification.unit }} : {{ myNotification.goalExchangeRate }} {{ myNotification.calcType == 'LTE' ? '이상' : '이하' }} ({{
+                ✔️ 🔔 {{ myNotification.unit }} : {{ myNotification.goalExchangeRate }} {{ myNotification.calcType == 'LTE' ? '이하' : '이상' }} ({{
                   myNotification.smsEnabled ? 'SMS & ' : ''
                 }}
                 {{ myNotification.emailEnabled ? 'EMAIL' : '' }})
