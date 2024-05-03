@@ -1,9 +1,8 @@
 FROM node:20 AS builder
 # 폴더 지정
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
 COPY . .
+RUN npm install
 RUN npm run build
 
 # vue배포하려면 웹서버 필요함 -> nginx 이용
