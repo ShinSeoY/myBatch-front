@@ -53,10 +53,10 @@ const onSubmit = async () => {
               phone: phone.value
             })
             $q.notify({
-              color: 'red-5',
+              color: 'green-4',
               textColor: 'white',
-              icon: 'warning',
-              message: '로그인을 다시 진행해주세요'
+              icon: 'cloud_done',
+              message: '회원가입이 완료되었습니다. \n 로그인을 다시 해주세요!'
             })
           })
           .onCancel(() => {
