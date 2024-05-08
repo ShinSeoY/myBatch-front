@@ -36,7 +36,7 @@ const onSubmit = async () => {
           color: 'green-4',
           textColor: 'white',
           icon: 'cloud_done',
-          message: '로그인 성공'
+          message: '로그인 완료'
         })
         break
       default:
@@ -51,6 +51,12 @@ const onSubmit = async () => {
             await axios.post('/member/signup', {
               email: email.value,
               phone: phone.value
+            })
+            $q.notify({
+              color: 'red-5',
+              textColor: 'white',
+              icon: 'warning',
+              message: '로그인을 다시 진행해주세요'
             })
           })
           .onCancel(() => {
