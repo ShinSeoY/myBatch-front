@@ -69,20 +69,60 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>로그인 및 회원가입</h1>
-    <div class="q-pa-md" style="max-width: 400px">
+  <div id="app">
+    <!-- <h1>로그인 및 회원가입</h1> -->
+    <q-page class="q-pa-md">
       <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
         <q-input filled v-model="email" label="이메일" lazy-rules :rules="[(val) => (val && val.length > 0) || '이메일을 입력하세요']" />
 
         <q-input filled v-model="phone" label="핸드폰번호" lazy-rules :rules="[(val) => (val && val.length > 0) || '핸드폰번호를 입력하세요']" />
 
-        <div>
-          <q-btn label="로그인 및 회원가입" type="submit" color="primary" />
+        <div class="button">
+          <q-btn class="login" label="로그인" onClick="login" color="primary" />
+          <div class="or">or</div>
+          <q-btn class="signup" label="회원가입" onClick="signup" color="primary" />
         </div>
       </q-form>
-    </div>
+    </q-page>
   </div>
 </template>
 
-<style></style>
+<style>
+#app {
+  text-align: left;
+  color: #2c3e50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.q-page {
+  padding-left: auto;
+}
+.q-pa-md {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+.q-gutter-md {
+  margin-top: 5%;
+  width: 60%;
+}
+.button {
+  display: flex;
+  flex-direction: column;
+}
+.login,
+.signup {
+  flex: 1;
+  font-weight: bold;
+}
+.or {
+  font-size: 15px;
+  color: gray;
+  text-align: center;
+  margin: 15px;
+}
+</style>
