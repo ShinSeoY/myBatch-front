@@ -10,7 +10,11 @@ const $router = useRouter()
 const email = ref(null)
 const phone = ref(null)
 
-const onSubmit = async () => {
+const signup = () => {
+  console.log('sign up...')
+}
+
+const login = async () => {
   if (!email.value || !phone.value) {
     $q.notify({
       color: 'red-5',
@@ -70,26 +74,25 @@ const onSubmit = async () => {
 
 <template>
   <div id="app">
-    <!-- <h1>로그인 및 회원가입</h1> -->
     <q-page class="q-pa-md">
-      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+      <q-form class="q-gutter-md">
         <q-input filled v-model="email" label="이메일" lazy-rules :rules="[(val) => (val && val.length > 0) || '이메일을 입력하세요']" />
 
         <q-input filled v-model="phone" label="핸드폰번호" lazy-rules :rules="[(val) => (val && val.length > 0) || '핸드폰번호를 입력하세요']" />
 
         <div class="button">
-          <q-btn class="login" label="로그인" onClick="login" color="primary" />
+          <q-btn class="login" label="로그인" @click="login" color="primary" />
           <div class="or">or</div>
-          <q-btn class="signup" label="회원가입" onClick="signup" color="primary" />
+          <q-btn class="signup" label="회원가입" @click="signup" color="primary" />
         </div>
       </q-form>
     </q-page>
   </div>
 </template>
 
-<style>
+<style scoped>
 #app {
-  text-align: left;
+  text-align: center;
   color: #2c3e50;
   display: flex;
   justify-content: center;
