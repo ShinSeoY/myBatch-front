@@ -15,6 +15,12 @@ const routes: RouteRecordRaw[] = [
         path: 'login',
         component: () => import('pages/Login.vue'),
         meta: { noRequireAuth: true }
+      },
+      {
+        name: 'Signup',
+        path: 'signup',
+        component: () => import('pages/Signup.vue'),
+        meta: { noRequireAuth: true }
       }
     ]
   },

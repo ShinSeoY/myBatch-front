@@ -10,10 +10,6 @@ const $router = useRouter()
 const email = ref(null)
 const phone = ref(null)
 
-const signup = () => {
-  console.log('sign up...')
-}
-
 const login = async () => {
   if (!email.value || !phone.value) {
     $q.notify({
@@ -44,29 +40,12 @@ const login = async () => {
         })
         break
       default:
-        $q.dialog({
-          title: '회원가입',
-          message: `회원가입 되어있지 않은 사용자 입니다. <br/> <br/> 이메일 : ${email.value} <br/> 핸드폰번호 : ${phone.value} <br/><br/> 위 정보로 회원가입을 진행하시겠습니까?`,
-          ok: '예',
-          cancel: '아니오',
-          html: true
+        $q.notify({
+          color: 'red-5',
+          textColor: 'white',
+          icon: 'warning',
+          message: '이메일, 핸드폰번호를 확인해주세요'
         })
-          .onOk(async () => {
-            await axios.post('/member/signup', {
-              email: email.value,
-              phone: phone.value
-            })
-            $q.notify({
-              color: 'green-4',
-              textColor: 'white',
-              icon: 'cloud_done',
-              message: '회원가입이 완료되었습니다. \n 로그인을 다시 해주세요!'
-            })
-          })
-          .onCancel(() => {
-            email.value = null
-            phone.value = null
-          })
     }
   }
 }
@@ -83,7 +62,7 @@ const login = async () => {
         <div class="button">
           <q-btn class="login" label="로그인" @click="login" color="primary" />
           <div class="or">or</div>
-          <q-btn class="signup" label="회원가입" @click="signup" color="primary" />
+          <q-btn class="signup" label="회원가입" @click="$router.push({ name: 'Signup' })" color="primary" />
         </div>
       </q-form>
     </q-page>
