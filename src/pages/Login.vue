@@ -61,7 +61,7 @@ const login = async () => {
 
         <div class="button">
           <q-btn class="login" label="로그인" @click="login" color="primary" />
-          <div class="or">or</div>
+          <div class="or">OR</div>
           <q-btn class="signup" label="회원가입" @click="$router.push({ name: 'Signup' })" color="primary" />
         </div>
       </q-form>
