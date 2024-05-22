@@ -11,5 +11,4 @@ Vue3 <br/>
 Quasar <br/>
 Docker <br/>
 Docker-compose <br/>
-<br/>
-test
+<br/>∂
