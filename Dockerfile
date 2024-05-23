@@ -1,9 +1,10 @@
-FROM node:20 AS builder
-# 폴더 지정
-WORKDIR /app
-COPY . .
-RUN npm install
-RUN npm run build
+# jenkins 안 쓸 땐 아래 부분 주석 해제해야함
+# FROM node:20 AS builder
+# # 폴더 지정
+# WORKDIR /app
+# COPY . .
+# RUN npm install
+# RUN npm run build
 
 # vue배포하려면 웹서버 필요함 -> nginx 이용
 FROM nginx:latest
