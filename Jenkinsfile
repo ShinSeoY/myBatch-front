@@ -3,6 +3,10 @@
 // back 에서는 git pull back git repository -> docker compose down -> rmi back images -> docker compose up -d
 pipeline {
     agent any
+
+    tools {
+        nodejs 'nodejs-20.12.0'
+    }
     
     stages {
         stage('Checkout') {
