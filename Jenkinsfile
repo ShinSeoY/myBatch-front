@@ -54,7 +54,7 @@ pipeline {
                 sh 'echo "3. start remove previouse docker step"'
                  // EC2 인스턴스에서 Jenkins 컨테이너로 파일 복사
                 sh """
-                docker cp /home/ubuntu/myExchange2/docker-compose.yml jenkins:/var/jenkins_home/workspace/docker-compose.yml
+                docker cp /host_home/myExchange2/docker-compose.yml jenkins:/var/jenkins_home/workspace/docker-compose.yml
                 cd /var/jenkins_home/workspace
                 docker-compose -f /var/jenkins_home/workspace/docker-compose.yml down
                 docker rmi myexchange2-vue
