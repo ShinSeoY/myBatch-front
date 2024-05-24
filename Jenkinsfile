@@ -25,6 +25,7 @@ pipeline {
             steps {
                 echo '1. start build project step'
                 sh '''
+                pwd
                 cd /home/ubuntu/myExchange2/myBatch-front
                 npm install
                 npm run build
