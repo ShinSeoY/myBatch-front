@@ -49,6 +49,20 @@ pipeline {
                 echo '2. start test project step'
             }
         }
+        stage('Check Docker Network') {
+            steps {
+                script {
+                    def networkName = 'my_exchange_network'
+                    def networkCheck = sh(script: "docker network ls --filter name=${networkName} --format '{{.Name}}'", returnStdout: true).trim()
+
+                    if (networkCheck.isEmpty()) {
+                        sh "docker network create ${networkName}"
+                    } else {
+                        echo "Network ${networkName} already exists."
+                    }
+                }
+            }
+        }
         stage('Docker Rm') {
             steps {
                 sh 'echo "3. start remove previous docker step"'
