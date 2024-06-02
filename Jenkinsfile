@@ -54,19 +54,19 @@ pipeline {
                 sh 'echo "3. start remove previous docker step"'
                  // EC2 인스턴스에서 Jenkins 컨테이너로 my-exchange용 docker compose.yml 파일 복사 (jenkins용 docker-compose.yml 파일에 host_home/home/ubuntu와 호스트(ec2)의 폴더 volumes 설정 해놈)
                 sh """
-                docker cp /host_home/myExchange2/docker-compose.yml jenkins:/var/jenkins_home/workspace/docker-compose.yml
+                docker cp /host_home/myExchange2/front-docker-compose.yml jenkins:/var/jenkins_home/workspace/front-docker-compose.yml
                 docker cp /host_home/myExchange2/.env jenkins:/var/jenkins_home/workspace/.env
                 cd /var/jenkins_home/workspace
-                docker-compose down
+                docker-compose -f front-docker-compose.yml down
                 """
             }
             
             post {
                 success { 
-                    sh 'echo "remove docker img success"'
+                    sh 'echo "remove docker success"'
                 }
                 failure {
-                    sh 'echo "remove docker img failed"'
+                    sh 'echo "remove docker failed"'
                 }
             }   
         }
@@ -76,7 +76,7 @@ pipeline {
                 sh '''
                 pwd
                 cd /var/jenkins_home/workspace
-                docker-compose up -d --build
+                docker-compose -f front-docker-compose.yml up -d --build
                 '''
             }
             post {
