@@ -52,6 +52,7 @@ pipeline {
         stage('Check Docker Network') {
             steps {
                 script {
+                    // name이 my_exchange_network 인 네트워크가 존재하지 않으면 새로 network create
                     def networkName = 'my_exchange_network'
                     def networkCheck = sh(script: "docker network ls --filter name=${networkName} --format '{{.Name}}'", returnStdout: true).trim()
 
