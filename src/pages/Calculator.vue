@@ -62,13 +62,14 @@ const setData = async (isCache = false) => {
     currentPage: currentPage.value,
     perPage: perPage
   })
+  const totalResult = await axios.get('/exchange')
   const totalCntRes = await axios.get('/exchange/count')
   totalCnt.value = totalCntRes.data
   switch (resultByPage.data.code) {
     case '1000':
       baseDate.value = dayjs(resultByPage.data.exchangeDtoList[0]?.updatedAt).format('YYYY-MM-DD HH:mm:ss')
       rows.value = resultByPage.data.exchangeDtoList
-      selectOptions.value = resultByPage.data.exchangeDtoList.map((it: any) => {
+      selectOptions.value = totalResult.data.exchangeDtoList.map((it: any) => {
         const name = it.unit == 'EUR' ? it.name : it.name + ' ' + it.krUnit
         if (it.unit == 'USD') {
           selectedItem.value = { name: name, unit: it.unit, dealBasR: it.dealBasR, krUnit: it.krUnit }
