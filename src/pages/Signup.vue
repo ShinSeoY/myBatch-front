@@ -9,6 +9,8 @@ const $router = useRouter()
 
 const email = ref(null)
 const phone = ref(null)
+const emailCheckResult = ref({})
+const phoneCheckResult = ref({})
 
 const isValidEmail = (val) => {
   const email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i
@@ -18,6 +20,20 @@ const isValidEmail = (val) => {
 const isValidPhone = (val) => {
   const phone_regex = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/
   return phone_regex.test(val)
+}
+
+const checkEmailDuplication = async () => {
+  const result = await axios.get(`/member/check-email/${email.value}`)
+  switch (result.data.code) {
+    case '1000':
+      if (result.data.isDuplicate) {
+        emailCheckResult.value.isValid = false
+        emailCheckResult.value.msg = '이미 사용 중인 이메일입니다.'
+      } else {
+        emailCheckResult.value.isValid = true
+        emailCheckResult.value.msg = '사용 가능한 이메일입니다.'
+      }
+  }
 }
 
 const signup = () => {
@@ -47,18 +63,25 @@ const signup = () => {
   <div id="app">
     <q-page class="q-pa-md">
       <q-form class="q-gutter-md">
-        <q-input filled v-model="email" label="이메일" lazy-rules :rules="[(val) => (val && val.length > 0 && isValidEmail(val)) || '이메일 형식에 맞게 입력해주세요']" />
-
-        <q-input
-          filled
-          v-model="phone"
-          label="핸드폰번호"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0 && isValidPhone(val)) || '핸드폰 번호를 형식에 맞게 입력해주세요']"
-        />
-
+        <div class="email-input-group">
+          <q-input filled v-model="email" label="이메일" :rules="[(val) => (val && val.length > 0 && isValidEmail(val)) || '이메일 형식에 맞게 입력해주세요']" />
+          <q-btn @click="checkEmailDuplication" label="중복체크" color="primary" :disable="!isValidEmail(email)" />
+        </div>
+        <div class="email-check-result" v-if="emailCheckResult.msg">{{ emailCheckResult.msg }}</div>
+        <div class="phone-input-group">
+          <q-input
+            filled
+            v-model="phone"
+            label="핸드폰번호"
+            lazy-rules
+            :rules="[(val) => (val && val.length > 0 && isValidPhone(val)) || '핸드폰 번호를 형식에 맞게 입력해주세요']"
+          />
+          <q-btn @click="checkPhone" label="인증문자 전송" color="primary" :disable="!isValidPhone(phone)" />
+        </div>
+        <q-input filled v-model="certMsg" label="인증번호" />
+        <div class="phone-check-result" v-if="phoneCheckResult.msg">{{ phoneCheckResult.msg }}</div>
         <div class="button">
-          <q-btn class="signup" label="회원가입" @click="signup" color="primary" />
+          <q-btn class="signup" label="가입하기" @click="signup" color="primary" :disable="!emailCheckResult.isValid || !isValidPhone(phone)" />
         </div>
       </q-form>
     </q-page>
@@ -88,7 +111,26 @@ const signup = () => {
   margin-top: 5%;
   width: 60%;
 }
+.email-input-group,
+.phone-input-group {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.email-input-group > .q-input,
+.phone-input-group > .q-input {
+  flex: 8;
+  margin-right: 10px;
+}
+
+.email-check-result {
+  margin-top: 0px;
+  text-align: left;
+  color: gray;
+}
 .button {
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
 }
