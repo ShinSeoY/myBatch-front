@@ -47,12 +47,17 @@ const sendCertificationMsg = async () => {
 }
 
 const checkCertification = async () => {
-  console.log(certMsg.value)
-  // const result = await axios.post('/member/certification-msg/check', { phone: phone.value, certMsg: certMsg.value })
-  // switch (result.data.code) {
-  //   case '1000':
-  //   // isSendMsg.value = true
-  // }
+  const result = await axios.post('/member/certification-msg/check', { phone: phone.value, certificationMsg: certMsg.value })
+  switch (result.data.code) {
+    case '1000':
+      if (!result.data.isValid) {
+        phoneCheckResult.value.isValid = false
+        phoneCheckResult.value.msg = '인증번호가 일치하지 않습니다.'
+      } else {
+        phoneCheckResult.value.isValid = true
+        phoneCheckResult.value.msg = '인증번호가 일치합니다.'
+      }
+  }
 }
 
 const signup = () => {
@@ -94,6 +99,7 @@ const signup = () => {
             label="핸드폰번호"
             lazy-rules
             :rules="[(val) => (val && val.length > 0 && isValidPhone(val)) || '핸드폰 번호를 형식에 맞게 입력해주세요']"
+            :disable="isSendMsg"
           />
           <q-btn @click="sendCertificationMsg" label="인증문자 전송" color="primary" :disable="!isValidPhone(phone)" />
         </div>
@@ -149,7 +155,8 @@ const signup = () => {
   margin-right: 10px;
 }
 
-.email-check-result {
+.email-check-result,
+.phone-check-result {
   margin-top: 0px;
   text-align: left;
   color: gray;
