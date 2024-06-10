@@ -10,6 +10,8 @@ const $router = useRouter()
 const email = ref(null)
 const phone = ref(null)
 const emailCheckResult = ref({})
+const isSendMsg = ref(false)
+const certMsg = ref(null)
 const phoneCheckResult = ref({})
 
 const isValidEmail = (val) => {
@@ -34,6 +36,23 @@ const checkEmailDuplication = async () => {
         emailCheckResult.value.msg = '사용 가능한 이메일입니다.'
       }
   }
+}
+
+const sendCertificationMsg = async () => {
+  const result = await axios.post('/member/certification-msg', { phone: phone.value })
+  switch (result.data.code) {
+    case '1000':
+      isSendMsg.value = true
+  }
+}
+
+const checkCertification = async () => {
+  console.log(certMsg.value)
+  // const result = await axios.post('/member/certification-msg/check', { phone: phone.value, certMsg: certMsg.value })
+  // switch (result.data.code) {
+  //   case '1000':
+  //   // isSendMsg.value = true
+  // }
 }
 
 const signup = () => {
@@ -76,10 +95,14 @@ const signup = () => {
             lazy-rules
             :rules="[(val) => (val && val.length > 0 && isValidPhone(val)) || '핸드폰 번호를 형식에 맞게 입력해주세요']"
           />
-          <q-btn @click="checkPhone" label="인증문자 전송" color="primary" :disable="!isValidPhone(phone)" />
+          <q-btn @click="sendCertificationMsg" label="인증문자 전송" color="primary" :disable="!isValidPhone(phone)" />
         </div>
-        <q-input filled v-model="certMsg" label="인증번호" />
+        <div class="certification-input-group">
+          <q-input :disable="!isSendMsg" filled v-model="certMsg" label="인증번호" />
+          <q-btn @click="checkCertification" label="인증문자 확인" color="primary" :disable="!isSendMsg" />
+        </div>
         <div class="phone-check-result" v-if="phoneCheckResult.msg">{{ phoneCheckResult.msg }}</div>
+
         <div class="button">
           <q-btn class="signup" label="가입하기" @click="signup" color="primary" :disable="!emailCheckResult.isValid || !isValidPhone(phone)" />
         </div>
@@ -112,14 +135,16 @@ const signup = () => {
   width: 60%;
 }
 .email-input-group,
-.phone-input-group {
+.phone-input-group,
+.certification-input-group {
   display: flex;
   align-items: center;
   flex-direction: row;
 }
 
 .email-input-group > .q-input,
-.phone-input-group > .q-input {
+.phone-input-group > .q-input,
+.certification-input-group > .q-input {
   flex: 8;
   margin-right: 10px;
 }
