@@ -2,28 +2,29 @@
 import dayjs from 'dayjs'
 import { useQuasar } from 'quasar'
 import { axios } from 'src/boot/axios'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 const $q = useQuasar()
 
 const columns: any = [
   { name: 'name', label: '국가명', align: 'center', field: (row: any) => row.name },
   { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.unit },
-  { name: 'dealBasR', align: 'right', label: '거래 기준 환율', field: (row: any) => row.dealBasR },
-  { name: 'exchangeRate', align: 'right', label: 'Exchange Rate Per 1000 KRW', field: (row: any) => row.exchangeRate + `  ${row.krUnit}` }, // = 전환금액/거래기준환율
-  { name: 'ttb', label: '송금 받을 때 환율', field: (row: any) => row.ttb },
-  { name: 'tts', label: '송금 보낼 때 환율', field: (row: any) => row.tts }
+  { name: 'dealBasR', align: 'right', label: '매매 기준율', field: (row: any) => row.dealBasR },
+  { name: 'exchangeRate', align: 'right', label: '1000원 당 환산율', field: (row: any) => (1000 / row.dealBasR).toFixed(2) + `  ${row.krUnit}` } // = 전환금액/거래기준환율
 ]
 
 const rows: any = ref([])
 
 const baseDate = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
 const selectedFav = ref([])
-const originAmount = ref()
-const chagnedAmount = ref()
+const firstAmount = ref(0)
+const secondAmount = ref(0)
+const selectedFirstItem = ref()
+const selectedSecondItem = ref()
+const selectFirstOptions: any = ref([])
+const selectSecondOptions: any = ref([])
+
 const dense = ref(false)
-const selectedItem = ref()
-const selectOptions: any = ref([])
 const currentPage = ref(1)
 const totalCnt = ref()
 const pageCnt = ref(0)
@@ -39,18 +40,27 @@ const clickFavorite = async () => {
   })
 }
 
-const calcChangedAmount = () => {
-  if (originAmount.value) {
-    let times = 1
-    // 일본, 인도네시아 => * 100
-    if (['IDR', 'JPY'].includes(selectedItem.value.unit)) {
-      times = 100
-    }
-    chagnedAmount.value = Math.floor((originAmount.value / selectedItem.value.dealBasR) * times * 100) / 100.0 + ' ' + selectedItem.value.krUnit
-  } else {
-    chagnedAmount.value = null
+const convertCurrency = (direction: 'first' | 'second') => {
+  if (!selectedFirstItem.value || !selectedSecondItem.value) return
+
+  const firstRate = selectedFirstItem.value.dealBasR
+  const secondRate = selectedSecondItem.value.dealBasR
+  if (direction === 'first' && firstAmount.value !== null) {
+    const krwAmount = firstAmount.value * firstRate
+    secondAmount.value = Math.round((krwAmount / secondRate) * 100) / 100
+  } else if (direction === 'second' && secondAmount.value !== null) {
+    const krwAmount = secondAmount.value * secondRate
+    firstAmount.value = Math.round((krwAmount / firstRate) * 100) / 100
   }
 }
+
+watch([selectedFirstItem, selectedSecondItem], () => {
+  if (firstAmount.value !== null) {
+    convertCurrency('first')
+  } else if (secondAmount.value !== null) {
+    convertCurrency('second')
+  }
+})
 
 const paging = async (n: number) => {
   currentPage.value = n
@@ -69,13 +79,14 @@ const setData = async (isCache = false) => {
     case '1000':
       baseDate.value = dayjs(resultByPage.data.exchangeDtoList[0]?.updatedAt).format('YYYY-MM-DD HH:mm:ss')
       rows.value = resultByPage.data.exchangeDtoList
-      selectOptions.value = totalResult.data.exchangeDtoList.map((it: any) => {
-        const name = it.unit == 'EUR' ? it.name : it.name + ' ' + it.krUnit
-        if (it.unit == 'USD') {
-          selectedItem.value = { name: name, unit: it.unit, dealBasR: it.dealBasR, krUnit: it.krUnit }
-        }
+      const options = totalResult.data.exchangeDtoList.map((it: any) => {
+        const name = it.name + ' ' + it.unit
         return { name: name, unit: it.unit, dealBasR: it.dealBasR, krUnit: it.krUnit }
       })
+      selectFirstOptions.value = options
+      selectedFirstItem.value = options.filter((v: any) => v.unit === 'KRW')[0]
+      selectSecondOptions.value = options
+      selectedSecondItem.value = options.filter((v: any) => v.unit === 'USD')[0]
   }
   pageCnt.value = Math.ceil(totalCnt.value / perPage)
 }
@@ -93,17 +104,32 @@ onMounted(async () => {
           <div class="calc_title">환율 계산기</div>
           <div class="base-date" style="text-align: left">기준 날짜 : {{ baseDate }}</div>
           <div class="input-container">
-            <div class="input-div">
-              <q-input class="custom-input" outlined v-model="originAmount" label="환전 전 금액 (원)" :dense="dense" @update:model-value="calcChangedAmount" />
+            <div class="input-group">
+              <div class="input-div">
+                <q-input class="custom-input" outlined v-model="firstAmount" label="" :dense="dense" @update:model-value="convertCurrency('first')">
+                  <template v-slot:append>
+                    <div class="currency-label">{{ selectedFirstItem?.krUnit }}</div>
+                  </template>
+                </q-input>
+              </div>
+              <div class="input-div select">
+                <q-select calss="custom-input" v-model="selectedFirstItem" :options="selectFirstOptions" option-label="name" outlined />
+              </div>
             </div>
             <div class="input-div img">
               <img class="spacer" src="/icons/exchange.png" />
             </div>
-            <div class="input-div">
-              <q-input class="custom-input" outlined v-model="chagnedAmount" disable readonly label="환전 후 금액" :dense="dense" />
-            </div>
-            <div class="input-div select">
-              <q-select calss="custom-input" v-model="selectedItem" :options="selectOptions" option-label="name" outlined @update:model-value="calcChangedAmount" />
+            <div class="input-group">
+              <div class="input-div">
+                <q-input class="custom-input" outlined v-model="secondAmount" label="" :dense="dense" @update:model-value="convertCurrency('second')">
+                  <template v-slot:append>
+                    <div class="currency-label">{{ selectedSecondItem?.krUnit }}</div>
+                  </template>
+                </q-input>
+              </div>
+              <div class="input-div select">
+                <q-select calss="custom-input" v-model="selectedSecondItem" :options="selectSecondOptions" option-label="name" outlined />
+              </div>
             </div>
           </div>
         </div>
@@ -177,13 +203,19 @@ onMounted(async () => {
 .spacer {
   width: 50px;
   height: 50px;
-  margin: 0px 20px;
 }
 .input-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-group {
+  display: flex;
+  width: 100%;
   justify-content: center;
 }
+
 .input-div {
   flex: 1;
   padding: 5px;
@@ -193,29 +225,53 @@ onMounted(async () => {
 }
 
 .input-div.img {
-  flex: 0 0 auto;
-  width: 30px;
-  height: 30px;
-  margin: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .input-div.select {
-  flex-grow: 0.5;
+  flex: 0 0 auto;
+  min-width: 200px;
+}
+
+.q-select {
+  width: 100%;
 }
 
 @media screen and (max-width: 600px) {
-  .input-div {
-    flex-basis: 100%;
+  .input-group {
+    flex-direction: column;
+  }
+
+  .input-div,
+  .input-div.select {
+    width: 100%;
   }
 }
 .custom-input {
-  flex: 1;
-  margin-right: auto;
-  margin-left: auto;
+  position: relative;
   width: 100%;
-  min-width: 200px;
 }
+
+.custom-input .q-field__native,
+.custom-input .q-field__input {
+  text-align: right !important;
+  padding-right: 40px !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+}
+
+.currency-label {
+  position: absolute;
+  bottom: 2px;
+  right: 8px;
+  font-size: 12px;
+  color: gray;
+  font-weight: bold;
+}
+
 .pagination-container {
-  justify-content: center; /* 수평 가운데 정렬 */
+  justify-content: center;
 }
 </style>
