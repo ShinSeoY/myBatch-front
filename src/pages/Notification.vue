@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { axios } from 'src/boot/axios'
 import { useQuasar } from 'quasar'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const $q = useQuasar()
 
@@ -61,16 +61,21 @@ const onSubmit = () => {
   }
 }
 
+const calcDealBasR = computed(() => {
+  const res = selectedItem.value.displayUnit ? selectedItem.value.dealBasR * selectedItem.value.displayUnit : selectedItem.value.dealBasR
+  return res + ' 원'
+})
+
 const setData = async () => {
   const result = await axios.get('/exchange')
   switch (result.data.code) {
     case '1000':
       selectOptions.value = result.data.exchangeDtoList.map((it: any) => {
-        const name = it.unit == 'EUR' ? it.name + `(${it.unit})` : it.name + ' ' + it.krUnit + `(${it.unit})`
+        const name = it.name + ' ' + it.krUnit + (it.displayUnit ? ` (${it.displayUnit + ' ' + it.unit})` : ` (${it.unit})`)
         if (it.unit == 'USD') {
-          selectedItem.value = { name: name, unit: it.unit, dealBasR: it.dealBasR + '원', krUnit: it.krUnit }
+          selectedItem.value = { name: name, unit: it.unit, dealBasR: it.dealBasR, krUnit: it.krUnit, displayUnit: it.displayUnit }
         }
-        return { name: name, unit: it.unit, dealBasR: it.dealBasR + '원', krUnit: it.krUnit }
+        return { name: name, unit: it.unit, dealBasR: it.dealBasR, krUnit: it.krUnit, displayUnit: it.displayUnit }
       })
   }
   const myNotificationResult = await axios.get('/member/notification')
@@ -128,8 +133,9 @@ onMounted(async () => {
             <p class="setting-sub-title">통화</p>
             <q-select filled v-model="selectedItem" :options="selectOptions" option-label="name" />
 
-            <p class="setting-sub-title">현재고시환율</p>
-            <q-input filled v-model="selectedItem.dealBasR" label="현재고시환율" disable readonly />
+            <p class="setting-sub-title">현재환율</p>
+
+            <q-input filled v-model="calcDealBasR" label="현재환율" disable readonly />
 
             <p class="setting-sub-title">목표환율</p>
             <div class="goalSetting-container">
