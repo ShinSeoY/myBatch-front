@@ -10,7 +10,7 @@ const columns: any = [
   { name: 'name', label: '국가명', align: 'center', field: (row: any) => row.name },
   { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.unit },
   { name: 'dealBasR', align: 'right', label: '매매 기준율', field: (row: any) => row.dealBasR },
-  { name: 'exchangeRate', align: 'right', label: '1000원 당 환산율', field: (row: any) => (1000 / row.dealBasR).toFixed(2) + `  ${row.krUnit}` } // = 전환금액/거래기준환율
+  { name: 'exchangeRate', align: 'right', label: '1000원 당 환전 금액', field: (row: any) => (1000 / row.dealBasR).toFixed(2) + `  ${row.krUnit}` } // = 전환금액/거래기준환율
 ]
 
 const rows: any = ref([])

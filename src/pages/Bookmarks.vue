@@ -2,50 +2,56 @@
 import { onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { axios } from 'src/boot/axios'
+import { MemberFav, MemberFavResponse, Column } from '../type/bookmarks'
 
 const $q = useQuasar()
 
 const pagination = ref({ rowsPerPage: 0 })
 
-const columns: any = [
+const columns: Column[] = [
   { name: 'id', label: '#', field: 'id' },
-  { name: 'name', required: true, label: '국가명', align: 'center', field: (row: any) => row.name },
-  { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.unit }, //ex) USD, KRW, ..
-  { name: 'dealBasR', align: 'right', label: '거래 기준 환율', field: (row: any) => row.dealBasR },
-  { name: 'exchangeRate', align: 'right', label: 'Exchange Rate Per 1000 KRW', field: (row: any) => row.exchangeRate + `  ${row.krUnit}` }, // = 전환금액/거래기준환율
-  { name: 'favorite', label: '즐겨찾기', align: 'center', field: (row: any) => row.favorite }
+  { name: 'name', required: true, label: '국가명', align: 'center', field: 'name' },
+  { name: 'unit', align: 'center', label: '단위', field: 'unit' },
+  { name: 'dealBasR', align: 'right', label: '거래 기준 환율', field: 'dealBasR' },
+  { name: 'exchangeRate', align: 'right', label: '1000원 당 환전 금액', field: (row: MemberFav) => (1000 / row.dealBasR).toFixed(2) + `  ${row.krUnit}` },
+  { name: 'favorite', label: '즐겨찾기', align: 'center', field: 'favorite' }
 ]
 
-const rows = ref([])
+const rows = ref<MemberFav[]>([])
 
-const updateFavorite = (row: any) => {
-  $q.dialog({ title: '알림', message: '즐겨찾기에서 해제하시겠습니까?', ok: '예', cancel: '아니오' })
-    .onOk(async () => {
-      const indexToRemove = rows.value.findIndex((r) => r === row)
-      rows.value.splice(indexToRemove, 1)
-      await axios.delete(`/member/fav/${row.unit}`)
+const updateFavorite = async (row: MemberFav) => {
+  try {
+    await $q.dialog({
+      title: '알림',
+      message: '즐겨찾기에서 해제하시겠습니까?',
+      ok: '예',
+      cancel: '아니오'
     })
-    .onCancel(() => {
-      row.favorite = true
-    })
-}
 
-const setData = async () => {
-  const result = await axios.get('/member/fav')
-  switch (result.data.code) {
-    case '1000':
-      var i = 1
-      rows.value = result.data.memberFavDtoList?.map((it: any) => {
-        it.id = i++
-        it.favorite = true
-        return it
-      })
+    const indexToRemove = rows.value.findIndex((r) => r === row)
+    rows.value.splice(indexToRemove, 1)
+    await axios.delete(`/member/fav/${row.unit}`)
+  } catch {
+    row.favorite = true
   }
 }
 
-onMounted(async () => {
-  setData()
-})
+const setData = async () => {
+  try {
+    const result = await axios.get<MemberFavResponse>('/member/fav')
+    if (result.data.code === '1000') {
+      rows.value = result.data.memberFavDtoList.map((it: MemberFav, index: number) => ({
+        ...it,
+        id: index + 1,
+        favorite: true
+      }))
+    }
+  } catch (error) {
+    console.error('Failed to fetch data:', error)
+  }
+}
+
+onMounted(setData)
 </script>
 
 <template>
