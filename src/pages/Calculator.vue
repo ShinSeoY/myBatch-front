@@ -13,12 +13,7 @@ const columns: Column[] = [
   { name: 'dealBasR', align: 'right', label: '매매 기준율', field: (row: any) => row.dealBasR },
   { name: 'exchangeRate', align: 'right', label: '1000원 당 환전 금액', field: (row: any) => (1000 / row.dealBasR).toFixed(2) + `  ${row.krUnit}` } // = 전환금액/거래기준환율
 ]
-
 const rows = ref([])
-// const rows = ref<ExchangeRate[]>([])
-// const selectedFav = ref<ExchangeRate[]>([])
-// const selectFirstOptions = ref<ExchangeOption[]>([])
-// const selectSecondOptions = ref<ExchangeOption[]>([])
 
 const baseDate = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
 const selectedFav = ref([])
@@ -34,6 +29,14 @@ const currentPage = ref(1)
 const totalCnt = ref()
 const pageCnt = ref(0)
 const perPage = 5
+const searchTerm = ref('')
+
+const filteredRows = () => {
+  if (!searchTerm.value) return rows.value
+  // return rows.value.filter(row =>
+  //   row..toLowerCase().includes(searchTerm.value.toLowerCase())
+  // )
+}
 
 const clickFavorite = async () => {
   $q.dialog({ title: '알림', message: '즐겨찾기에 추가하시겠습니까?', ok: '예', cancel: '아니오' }).onOk(async () => {
@@ -138,13 +141,12 @@ onMounted(async () => {
             </div>
           </div>
         </div>
-        <div>
+        <div class="list">
           <q-table
             flat
-            bordered
             hide-pagination
-            :rows-per-page-options="[0]"
             title="오늘의 환율"
+            :rows-per-page-options="[0]"
             :rows="rows"
             :columns="columns"
             row-key="name"
@@ -152,7 +154,16 @@ onMounted(async () => {
             v-model:selected="selectedFav"
           >
             <template v-slot:top-right>
-              <q-btn icon="add" label="즐겨찾기 추가" @click="clickFavorite" />
+              <q-input v-model="searchTerm" dense outlined placeholder="나라명 검색" class="search-input">
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </template>
+            <template v-slot:bottom>
+              <div class="row justify-end full-width q-table__bottom">
+                <q-btn flat dense label="즐겨찾기 추가" icon="add" @click="clickFavorite" class="favorite-btn" />
+              </div>
             </template>
           </q-table>
         </div>
@@ -198,6 +209,14 @@ onMounted(async () => {
   padding: 3%;
   margin-bottom: 5%;
 }
+
+.list {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 5px;
+  padding: 1%;
+  /* margin-bottom: 5%; */
+}
+
 .calc_title {
   text-align: left;
   font-size: 27px;
@@ -278,5 +297,24 @@ onMounted(async () => {
 
 .pagination-container {
   justify-content: center;
+}
+
+.q-table__bottom {
+  border-top: none !important;
+  padding-right: 5px;
+}
+
+.search-input {
+  width: 250px; /* 원하는 너비로 조정 */
+}
+
+.favorite-btn {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  box-shadow: none;
+  height: 40px; /* input 높이와 맞춤 */
+  padding: 7px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 </style>
