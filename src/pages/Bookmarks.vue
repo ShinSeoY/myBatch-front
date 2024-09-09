@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { axios } from 'src/boot/axios'
-import { MemberFav, MemberFavResponse, Column } from '../type/bookmarks'
+import { MemberFav, MemberFavResponse, Column } from '../type/bookmarksType'
 
 const $q = useQuasar()
 
@@ -21,7 +21,7 @@ const rows = ref<MemberFav[]>([])
 
 const updateFavorite = async (row: MemberFav) => {
   try {
-    await $q.dialog({
+    $q.dialog({
       title: '알림',
       message: '즐겨찾기에서 해제하시겠습니까?',
       ok: '예',
@@ -98,3 +98,4 @@ onMounted(setData)
   margin: 4% 3%;
 }
 </style>
+../type/bookmarksType

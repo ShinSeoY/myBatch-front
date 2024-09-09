@@ -2,18 +2,23 @@
 import dayjs from 'dayjs'
 import { useQuasar } from 'quasar'
 import { axios } from 'src/boot/axios'
+import { Column } from 'src/type/bookmarksType'
 import { onMounted, ref, watch } from 'vue'
 
 const $q = useQuasar()
 
-const columns: any = [
+const columns: Column[] = [
   { name: 'name', label: '국가명', align: 'center', field: (row: any) => row.name },
   { name: 'unit', align: 'center', label: '단위', field: (row: any) => row.unit },
   { name: 'dealBasR', align: 'right', label: '매매 기준율', field: (row: any) => row.dealBasR },
   { name: 'exchangeRate', align: 'right', label: '1000원 당 환전 금액', field: (row: any) => (1000 / row.dealBasR).toFixed(2) + `  ${row.krUnit}` } // = 전환금액/거래기준환율
 ]
 
-const rows: any = ref([])
+const rows = ref([])
+// const rows = ref<ExchangeRate[]>([])
+// const selectedFav = ref<ExchangeRate[]>([])
+// const selectFirstOptions = ref<ExchangeOption[]>([])
+// const selectSecondOptions = ref<ExchangeOption[]>([])
 
 const baseDate = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
 const selectedFav = ref([])
