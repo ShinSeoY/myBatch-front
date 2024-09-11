@@ -29,14 +29,7 @@ const currentPage = ref(1)
 const totalCnt = ref()
 const pageCnt = ref(0)
 const perPage = 5
-const searchTerm = ref('')
-
-const filteredRows = () => {
-  if (!searchTerm.value) return rows.value
-  // return rows.value.filter(row =>
-  //   row..toLowerCase().includes(searchTerm.value.toLowerCase())
-  // )
-}
+const keyword = ref('')
 
 const clickFavorite = async () => {
   $q.dialog({ title: '알림', message: '즐겨찾기에 추가하시겠습니까?', ok: '예', cancel: '아니오' }).onOk(async () => {
@@ -77,8 +70,11 @@ const paging = async (n: number) => {
 
 const setData = async (isCache = false) => {
   const resultByPage = await axios.post('/exchange', {
-    currentPage: currentPage.value,
-    perPage: perPage
+    keyword: keyword.value,
+    pageBaseDto: {
+      currentPage: currentPage.value,
+      perPage: perPage
+    }
   })
   const totalResult = await axios.get('/exchange')
   const totalCntRes = await axios.get('/exchange/count')
@@ -154,9 +150,9 @@ onMounted(async () => {
             v-model:selected="selectedFav"
           >
             <template v-slot:top-right>
-              <q-input v-model="searchTerm" dense outlined placeholder="나라명 검색" class="search-input">
+              <q-input v-model="keyword" dense outlined placeholder="나라명 검색" class="search-input" @keyup.enter="setData">
                 <template v-slot:append>
-                  <q-icon name="search" />
+                  <q-icon name="search" @click="setData" style="cursor: pointer" />
                 </template>
               </q-input>
             </template>
