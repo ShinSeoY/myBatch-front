@@ -1,4 +1,5 @@
-<script setup>
+<script setup lang="ts">
+import '../css/page/login.scss'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
@@ -68,43 +69,3 @@ const login = async () => {
     </q-page>
   </div>
 </template>
-
-<style scoped>
-#app {
-  text-align: center;
-  color: #2c3e50;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-.q-page {
-  padding-left: auto;
-}
-.q-pa-md {
-  width: 100%;
-  margin: auto;
-  display: flex;
-  justify-content: center;
-}
-.q-gutter-md {
-  margin-top: 5%;
-  width: 60%;
-}
-.button {
-  display: flex;
-  flex-direction: column;
-}
-.login,
-.signup {
-  flex: 1;
-  font-weight: bold;
-}
-.or {
-  font-size: 15px;
-  color: gray;
-  text-align: center;
-  margin: 15px;
-}
-</style>
