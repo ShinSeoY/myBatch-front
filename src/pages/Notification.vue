@@ -82,7 +82,7 @@ const setData = async () => {
   switch (myNotificationResult.data.code) {
     case '1000':
       myNotification.value = myNotificationResult.data.result
-      isVisible.value = true
+      isVisible.value = !myNotification.value.isTestAccount ? true : false
   }
 }
 
@@ -159,7 +159,9 @@ onMounted(async () => {
             </div>
 
             <div class="setting-btn-container">
-              <q-btn class="setting-btn" label="알림 설정" type="submit" color="primary" @click="onSubmit" />
+              <q-btn class="setting-btn" label="알림 설정" type="submit" color="primary" @click="onSubmit" :disable="myNotification.isTestAccount">
+                <q-tooltip v-if="myNotification.isTestAccount"> 테스트 계정은 알림 설정을 변경할 수 없습니다. </q-tooltip>
+              </q-btn>
             </div>
           </q-form>
         </div>
@@ -167,7 +169,7 @@ onMounted(async () => {
     </q-page>
   </div>
 </template>
-<style>
+<style scoped>
 #app {
   text-align: left;
   color: #2c3e50;
