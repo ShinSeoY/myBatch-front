@@ -68,8 +68,8 @@ const login = async (isTest: boolean) => {
           <q-btn class="signup" label="회원가입" @click="$router.push({ name: 'Signup' })" color="primary" />
           <q-btn class="test-login" label="테스트용 로그인" @click="login(true)" flat>
             <q-tooltip :offset="[0, 8]">
-              테스트 계정으로 로그인합니다 <br />
-              해당 계정으로는 알림설정이 불가합니다
+              테스트 계정으로 로그인합니다. <br />
+              해당 계정으로는 알림설정이 불가합니다.
             </q-tooltip>
           </q-btn>
         </div>
