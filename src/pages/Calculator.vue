@@ -81,7 +81,7 @@ const setData = async (isCache = false) => {
   totalCnt.value = totalCntRes.data
   switch (resultByPage.data.code) {
     case '1000':
-      baseDate.value = dayjs(resultByPage.data.exchangeDtoList[0]?.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+      baseDate.value = dayjs(resultByPage.data.exchangeDtoList[0]?.updatedAt).format('YYYY-MM-DD')
       rows.value = resultByPage.data.exchangeDtoList
       const options = totalResult.data.exchangeDtoList.map((it: any) => {
         const name = it.name + ' ' + it.unit
