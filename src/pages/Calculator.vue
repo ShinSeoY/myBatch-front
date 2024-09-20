@@ -15,7 +15,7 @@ const columns: Column[] = [
 ]
 const rows = ref([])
 
-const baseDate = ref(dayjs().format('YYYY-MM-DD HH:mm:ss'))
+const baseDate = ref(dayjs().format('YYYY-MM-DD'))
 const selectedFav = ref([])
 const firstAmount = ref(0)
 const secondAmount = ref(0)
