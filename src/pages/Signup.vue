@@ -1,27 +1,31 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { Ref, ref } from 'vue'
 import { axios } from 'src/boot/axios'
 
 const $q = useQuasar()
 const $router = useRouter()
 
-const email = ref(null)
-const phone = ref(null)
-const emailCheckResult = ref({})
-const isSendMsg = ref(false)
-const certMsg = ref(null)
-const phoneCheckResult = ref({})
+const email: Ref<string | null> = ref(null)
+const phone: Ref<string | null> = ref(null)
+const emailCheckResult: any = ref({})
+const isSendMsg: Ref<boolean> = ref(false)
+const certMsg: Ref<string | null> = ref(null)
+const phoneCheckResult: any = ref({})
 
-const isValidEmail = (val) => {
-  const email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i
-  return email_regex.test(val)
+const isValidEmail = (val: string | null) => {
+  if (val) {
+    const email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i
+    return email_regex.test(val)
+  }
 }
 
-const isValidPhone = (val) => {
-  const phone_regex = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/
-  return phone_regex.test(val)
+const isValidPhone = (val: string | null) => {
+  if (val) {
+    const phone_regex = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/
+    return phone_regex.test(val)
+  }
 }
 
 const checkEmailDuplication = async () => {
