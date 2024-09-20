@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import '../css/page/signup.scss'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
@@ -132,3 +131,64 @@ const signup = () => {
     </q-page>
   </div>
 </template>
+<style scoped>
+#app {
+  text-align: center;
+  color: #2c3e50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.q-page {
+  padding-left: auto;
+}
+.q-pa-md {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+}
+.q-gutter-md {
+  margin-top: 5%;
+  width: 60%;
+}
+.email-input-group,
+.phone-input-group,
+.certification-input-group {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.email-input-group > .q-input,
+.phone-input-group > .q-input,
+.certification-input-group > .q-input {
+  flex: 8;
+  margin-right: 10px;
+}
+
+.email-check-result,
+.phone-check-result {
+  margin-top: 0px;
+  text-align: left;
+  color: gray;
+}
+.button {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+}
+.login,
+.signup {
+  flex: 1;
+  font-weight: bold;
+}
+.or {
+  font-size: 15px;
+  color: gray;
+  text-align: center;
+  margin: 15px;
+}
+</style>

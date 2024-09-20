@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import '../css/page/bookmarks.scss'
 import { onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { axios } from 'src/boot/axios'
@@ -70,3 +69,32 @@ onMounted(setData)
     </q-page>
   </div>
 </template>
+
+<style>
+#app {
+  text-align: center;
+  color: #2c3e50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.q-page {
+  padding-left: auto;
+}
+
+.q-pa-md {
+  width: 100%;
+  margin: auto;
+}
+
+.q-table__title {
+  color: #2c3e50;
+  text-align: left;
+  font-size: 27px;
+  letter-spacing: 0.005em;
+  font-weight: bold;
+  min-width: 300px;
+  margin: 4% 3%;
+}
+</style>
