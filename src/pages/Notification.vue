@@ -99,6 +99,17 @@ onMounted(async () => {
     <q-page class="q-pa-md">
       <div class="q-pa-md child" style="min-width: 800px">
         <div class="notice-form">
+          <div v-if="isVisible" style="margin-bottom: 80px">
+            <h5 style="font-weight: bold; margin-bottom: 20px">설정된 알림 서비스</h5>
+            <div>
+              <p style="font-size: large; font-weight: bold">
+                ✔️ 🔔 {{ myNotification.unit }} : {{ myNotification.goalExchangeRate }} {{ myNotification.calcType == 'LTE' ? '이하' : '이상' }} ({{
+                  myNotification.smsEnabled ? 'SMS & ' : ''
+                }}
+                {{ myNotification.emailEnabled ? 'EMAIL' : '' }})
+              </p>
+            </div>
+          </div>
           <div class="notice">
             <div class="notice_title">목표환율 알림 서비스</div>
             <p class="notice-sub-title">목표환율 알림 서비스란?</p>
@@ -119,17 +130,6 @@ onMounted(async () => {
               <li>환율알림서비스를 받은 시점과 거래 시점의 환율은 다를 수 있으므로 실거래 시 꼭 확인 부탁드립니다.</li>
               <li>기존에 설정된 알림이 있다면 이전 설정은 초기화되고 새로운 알림으로 다시 설정됩니다.</li>
             </ul>
-          </div>
-          <div v-if="isVisible" style="margin-bottom: 80px">
-            <h5 style="font-weight: bold; margin-bottom: 20px">설정된 알림 서비스</h5>
-            <div>
-              <p style="font-size: large; font-weight: bold">
-                ✔️ 🔔 {{ myNotification.unit }} : {{ myNotification.goalExchangeRate }} {{ myNotification.calcType == 'LTE' ? '이하' : '이상' }} ({{
-                  myNotification.smsEnabled ? 'SMS & ' : ''
-                }}
-                {{ myNotification.emailEnabled ? 'EMAIL' : '' }})
-              </p>
-            </div>
           </div>
           <h5 style="font-weight: bold">목표환율 알림 설정</h5>
           <q-form class="q-gutter-md">
