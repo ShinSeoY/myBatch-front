@@ -2,8 +2,10 @@
 import { axios } from 'src/boot/axios'
 import { useQuasar } from 'quasar'
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const $q = useQuasar()
+const $router = useRouter()
 
 const selectedItem: any = ref({ dealBasR: 0 })
 const selectOptions: any = ref([])
@@ -56,6 +58,7 @@ const onSubmit = () => {
             icon: 'cloud_done',
             message: '알림 설정 완료'
           })
+          $router.push({ name: 'Notification' })
       }
     })
   }
